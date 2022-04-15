@@ -1,0 +1,16 @@
+.flex-v-center{
+    display: flex;
+    align-items: center;
+}
+
+.constructor-scroll{
+    max-height: 464px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+.f-right{
+    float: right;
+}
+.burger-inner-item:last-child{
+    margin-bottom: 0px;
+}
