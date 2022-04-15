@@ -13,6 +13,7 @@
 }
 
 .ingredient_card{
+    position: relative;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -38,3 +39,12 @@
     text-align: center;
 }
 
+.tabs{
+    display: flex;
+}
+
+.counter{
+    position: absolute;
+    top:0;
+    right: 10px;
+}

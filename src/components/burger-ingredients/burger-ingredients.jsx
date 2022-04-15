@@ -1,11 +1,12 @@
 import React from 'react';
 import styles from './burger-ingredients.module.css';
-import {Tab, CurrencyIcon} from '@ya.praktikum/react-developer-burger-ui-components'
+import {Tab, CurrencyIcon, Counter} from '@ya.praktikum/react-developer-burger-ui-components'
 import PropTypes from 'prop-types';
 import {dataBurgerPropTypes} from '../../utils/data';
 
 
-const BurgerIngredients = (props) => {     
+const BurgerIngredients = (props) => {    
+    const selectedIngredientIds = ['60666c42cc7b410027a1a9b9', '60666c42cc7b410027a1a9bd', '60666c42cc7b410027a1a9bf','60666c42cc7b410027a1a9b4', '60666c42cc7b410027a1a9b5','60666c42cc7b410027a1a9be','60666c42cc7b410027a1a9b1']; 
     const IngredientsTypeList = ({ data }) => {
         return (
             <ul className={`${styles.ingredient_list} ml-4 mt-6`}>
@@ -18,7 +19,15 @@ const BurgerIngredients = (props) => {
       };
       const IngredientCard = ({ data }) => {
         return (
-            <li key={data._id} className={`${styles.ingredient_card}`}>
+            <li  className={`${styles.ingredient_card}`}>
+                {
+                    selectedIngredientIds.filter(x=>x===data._id).length>0
+                    ?
+                    <div className={styles.counter}><Counter count={selectedIngredientIds.filter(x=>x===data._id).length}></Counter></div>
+                    :
+                    <></>
+                }
+                
                 <img src={data.image} className="ml-4"></img>
                 <div className={`${styles.ingredient_price} text text_type_digits-default mt-1 mb-1`}>{data.price}&nbsp;<CurrencyIcon/></div>
                 <div className={`${styles.text_center} text text_type_main-default text-center`}>{data.name}</div>
@@ -28,7 +37,7 @@ const BurgerIngredients = (props) => {
     return (
       <div className={`${styles.ingredient_block}`}>
           <h1 className="text text_type_main-large mt-10 mb-5">Соберите бургер</h1>
-          <div style={{ display: 'flex' }}>
+          <div className={styles.tabs}>
       <Tab value="buns" active={'buns'}>
         Булки
       </Tab>
@@ -59,5 +68,5 @@ const BurgerIngredients = (props) => {
 export default BurgerIngredients;
 
 BurgerIngredients.propTypes = {
-    data: PropTypes.arrayOf(dataBurgerPropTypes)
+    data: PropTypes.arrayOf(dataBurgerPropTypes.isRequired)
   };

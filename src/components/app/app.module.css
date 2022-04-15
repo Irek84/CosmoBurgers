@@ -8,7 +8,7 @@ main{
   width: 100%;
 }
 
-.main-content{
+.main_content{
   display: flex;
-    width: 1333px;
+  width: 1333px;
 }
