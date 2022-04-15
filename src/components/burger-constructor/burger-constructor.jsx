@@ -5,9 +5,10 @@ import {dataBurgerPropTypes} from '../../utils/data';
 import PropTypes from 'prop-types';
 
 const BurgerConstructor = (props) => {  
-    const SelectedBunId = '60666c42cc7b410027a1a9b1';
-    const bunTop = props.data.find(x=>x.id=SelectedBunId);
-    const bunBottom = props.data.find(x=>x.id=SelectedBunId);
+    const selectedBunId = '60666c42cc7b410027a1a9b1';
+    const bunTop = props.data.find(x=>x.id=selectedBunId);
+    const bunBottom = props.data.find(x=>x.id=selectedBunId);
+    const selectedIngredientIds = ['60666c42cc7b410027a1a9b9', '60666c42cc7b410027a1a9bd', '60666c42cc7b410027a1a9bf','60666c42cc7b410027a1a9b4', '60666c42cc7b410027a1a9b5','60666c42cc7b410027a1a9be'];
     return (
       <div className={`${styles.constructor_block}`}>
           <div className="mb-4 ml-4 mr-4 pl-8 mt-25">
@@ -20,9 +21,9 @@ const BurgerConstructor = (props) => {
           />
           </div>
         <div className={`${styles.constructor_scroll}`}>
-          {props.data.map(x=>(
-            x.id!==SelectedBunId ?
-            <div key={x._id}  className={`${styles.burger_inner_item} ml-4 mr-4 mb-4 `}>
+        {props.data.map((x, i)=>(
+            selectedIngredientIds.includes(x._id) ?
+            <div key={i} className={`${styles.burger_inner_item} ml-4 mr-4 mb-4 `}>
               <DragIcon type="primary" />
               <i className='ml-2'/>
               <ConstructorElement
@@ -32,7 +33,7 @@ const BurgerConstructor = (props) => {
               />
             </div>
             :
-            <></>
+            <React.Fragment key={i}></React.Fragment>
           ))}
           </div>
           <div className="ml-4 mt-4 mr-4 pl-8">
@@ -57,5 +58,5 @@ const BurgerConstructor = (props) => {
 export default BurgerConstructor;
 
 BurgerConstructor.propTypes = {
-  data: PropTypes.arrayOf(dataBurgerPropTypes)
+  data: PropTypes.arrayOf(dataBurgerPropTypes.isRequired)
 };
