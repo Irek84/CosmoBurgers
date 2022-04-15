@@ -1,32 +1,40 @@
-.ingredient-list{
+.ingredient_block{
+    width:49%;
+}
+.ingredient_block_scroll{
+    max-height: calc(100vh - 255px);
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+.ingredient_list{
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     flex-wrap: wrap;
 }
 
-.ingredient-card{
+.ingredient_card{
     display: flex;
     align-items: center;
     flex-direction: column;
-    width: 290px;
+    width: 46%;
 }
 
-.ingredient-card:nth-child(odd){
+.ingredient_card:nth-child(odd){
     margin-right: calc(var(--offset-base-size)  * 6);
 }
 
-.ingredient-price{
+.ingredient_price{
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.flex-v-center{
+.flex_v_center{
     display: flex;
     align-items: center;
 }
 
-.text-center{
+.text_center{
     text-align: center;
 }
 

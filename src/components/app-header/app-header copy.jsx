@@ -2,9 +2,11 @@ import React from 'react';
 import appHeaderStyles from './app-header.module.css';
 import {Logo, BurgerIcon, ListIcon, ProfileIcon} from '@ya.praktikum/react-developer-burger-ui-components'
 
-const AppHeader = (props) => {
+
+class AppHeader extends React.Component {
+  render() {
     return (
-      <header>
+      <header className={appHeaderStyles.header}>
           <nav className={appHeaderStyles.navbar}>
                 <div className={appHeaderStyles.navbar_item}>
                     <a className='pr-5 mt-4 mb-4'>
@@ -34,6 +36,7 @@ const AppHeader = (props) => {
         
       </header>
     );
+  }
 }
 
 export default AppHeader;
