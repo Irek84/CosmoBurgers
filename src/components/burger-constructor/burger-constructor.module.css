@@ -1,0 +1,20 @@
+.burger_inner_item{
+    display: flex;
+    align-items: center;
+}
+.constructor_block{
+    width: 50%;
+}
+.constructor_scroll{
+    max-height: calc(100vh - 490px);
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+.burger_inner_item:last-child{
+    margin-bottom: 0px;
+}
+.send_order{
+    float: right;
+    display: flex;
+    align-items: center;
+}
