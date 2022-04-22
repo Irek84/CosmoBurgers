@@ -4,8 +4,7 @@ header{
     width: 100%;
     background: #1C1C21;
 }
-
-.navbar{
+nav{
     display: flex;
     align-items: center;
     flex-wrap: nowrap;
@@ -14,25 +13,22 @@ header{
     justify-content: space-around;
     width: 1333px;
 }
-
-.navbar_item{
+nav > div {
     width:33%;
     display: flex;
     justify-content: center;
 }
-
-.navbar_item:first-child{
+nav>div:first-child{
     justify-content: flex-start;
 }
-.navbar_item:last-child{
+nav>div:last-child{
     justify-content: flex-end;;
 }
-
-.navbar_item a{
+nav>div>a{
     display: flex;
-    align-items: center;;
-}
-
-.text_secodary{
+    align-items: center;
     color:#8585AD;
+}
+.active{
+    color:white;
 }

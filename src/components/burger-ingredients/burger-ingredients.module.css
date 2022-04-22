@@ -1,5 +1,5 @@
 .ingredient_block{
-    width:49%;
+    width:51%;
 }
 .ingredient_block_scroll{
     max-height: calc(100vh - 255px);
@@ -17,7 +17,8 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    width: 46%;
+    width: 47%;
+    cursor:pointer;
 }
 
 .ingredient_card:nth-child(odd){
