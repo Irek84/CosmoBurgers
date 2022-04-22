@@ -1,21 +1,21 @@
-.ingredient_details{
+.component{
  display: flex;
  flex-direction: column;
  align-items: center;
 }
 
-.nutrition_facts{
+.component ul{
   display: flex;
   justify-content: space-between;
   width: 100%;
 }
 
-.nutrition_facts div{
+.component li{
   display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.nutrition_facts span{
+.component ul span{
  margin-top: 10px;
 }

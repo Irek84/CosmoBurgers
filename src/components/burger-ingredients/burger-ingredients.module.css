@@ -1,18 +1,14 @@
-.ingredient_block{
+.component{
     width:51%;
 }
-.ingredient_block_scroll{
-    max-height: calc(100vh - 255px);
-    overflow-y: scroll;
-    overflow-x: hidden;
-}
-.ingredient_list{
+
+.component ul{
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
 }
 
-.ingredient_card{
+.component li{
     position: relative;
     display: flex;
     align-items: center;
@@ -21,23 +17,20 @@
     cursor:pointer;
 }
 
-.ingredient_card:nth-child(odd){
+.component li:nth-child(odd){
     margin-right: calc(var(--offset-base-size)  * 6);
 }
 
-.ingredient_price{
+.list{
+    max-height: calc(100vh - 255px);
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.price{
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.flex_v_center{
-    display: flex;
-    align-items: center;
-}
-
-.text_center{
-    text-align: center;
 }
 
 .tabs{

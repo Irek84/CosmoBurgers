@@ -1,13 +1,14 @@
+import PropTypes from 'prop-types';
 import styles from './order-details.module.css'
 import {CheckMarkIcon} from '@ya.praktikum/react-developer-burger-ui-components'
 import vector1 from '../../images/vector1.svg'
 import vector2 from '../../images/vector2.svg'
 import vector3 from '../../images/vector3.svg'
 
-const OrderDetails = () => {
+const OrderDetails = (props) => {
 	return (
-		<section className={styles.OrderDetails}>
-			<h1 className='mt-20 mb-8 text text_type_digits-large'>034536</h1>
+		<section className={styles.component}>
+			<h1 className='mt-20 mb-8 text text_type_digits-large'>{props.orderNumber}</h1>
 			<div className="text text_type_main-medium mb-15">идентификатор заказа</div>
 			<div className={styles.wrapper}>
 				<img src={vector1}/>
@@ -22,3 +23,7 @@ const OrderDetails = () => {
 }
 
 export default OrderDetails;
+
+OrderDetails.propTypes = {
+	orderNumber: PropTypes.string.isRequired
+};

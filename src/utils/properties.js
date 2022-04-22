@@ -14,8 +14,6 @@ export const dataBurgerPropTypes = PropTypes.shape({
    image_large: PropTypes.string.isRequired,
  });
 
- export const url = 'https://norma.nomoreparties.space/api/ingredients';
-
+ export const ROOT_API_URL = 'https://norma.nomoreparties.space/api';
  export const selectedBunId = '60d3b41abdacab0026a733c6';
  export const selectedIngredientIds = ['60d3b41abdacab0026a733c6','60d3b41abdacab0026a733c8', '60d3b41abdacab0026a733ca', '60d3b41abdacab0026a733cc','60d3b41abdacab0026a733d0', '60d3b41abdacab0026a733d1','60d3b41abdacab0026a733c9'];
-       

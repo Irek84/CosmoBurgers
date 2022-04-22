@@ -19,13 +19,13 @@
   }
   
 .modalContent{
-  display:flex;
-  justify-content: center;
+    display:flex;
+    justify-content: center;
 }
 
-  .closeButton {
-      position: absolute;
-      top: 60px;
-      right: 40px;
-      cursor:pointer;
-  } 
+.closeButton {
+    position: absolute;
+    top: 60px;
+    right: 40px;
+    cursor:pointer;
+} 

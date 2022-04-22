@@ -4,7 +4,7 @@ import AppHeader from '../app-header/app-header';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import Modal from '../modal/modal';
-import {url} from '../../utils/properties';
+import {ROOT_API_URL} from '../../utils/properties';
 
 function App() {
   const [data, setData] = useState([]);
@@ -16,8 +16,10 @@ function App() {
 		content: null
 	});
 
+  const apiURL = ROOT_API_URL + '/ingredients';
+
   useEffect(()=>{
-    fetch(url)
+    fetch(apiURL)
     .then(response => {
       if (response.ok) {
         return response.json();
@@ -25,23 +27,25 @@ function App() {
       throw new Error('Ошибка в сети');
     })
     .then(data => {
-      setIsLoading(false);
       data.success?  
       setData(data.data)
       :
         setHasError(true)
       }
     )
+    .finally(()=>{
+      setIsLoading(false);
+    })
     .catch(e => {
       setHasError(true);
-      setIsLoading(false);
     });
 },[]);
+
   return (
     <>
       <AppHeader/>
       <main>
-        <div className={styles.main_content}>
+        <div>
         {isLoading && <div className={`${styles.notification} text text_type_main-medium`}>Загрузка...</div>}
         {hasError &&  <div className={`${styles.error} text text_type_main-medium`}>Произошла ошибка</div>}
         {

@@ -1,19 +1,19 @@
-.constructor_block{
+.component{
     width: 46%;
 }
-.constructor_scroll{
+.list{
     max-height: calc(100vh - 490px);
     overflow-x: hidden;
     overflow-y: scroll;
 }
-.burger_inner_item{
+.ingredient{
     display: flex;
     align-items: center;
 }
-.burger_inner_item:last-child{
+.ingredient:last-child{
     margin-bottom: 0px;
 }
-.send_order{
+.sendOrder{
     float: right;
     display: flex;
     align-items: center;

@@ -5,18 +5,18 @@ import OrderDetails from '../order-details/order-details';
 import {dataBurgerPropTypes, selectedIngredientIds, selectedBunId} from '../../utils/properties';
 import PropTypes from 'prop-types';
 
-const BurgerConstructor = (props) => {  
-    const bun = props.data.find(x=>x._id==selectedBunId);
+const BurgerConstructor = ({setModal, data}) => {  
+    const bun = data.find(ingredient=>ingredient._id==selectedBunId);
     
     const handleClick = () => {
-      props.setModal({
+      setModal({
         visible: true,
-        content: <OrderDetails/>
+        content: <OrderDetails orderNumber='034536'/>
       })
     }
     
     return (
-      <div className={`${styles.constructor_block}`}>
+      <div className={`${styles.component}`}>
           <div className="mb-4 ml-4 mr-4 pl-8 mt-25">
           <ConstructorElement
             text={bun.name + ' (верх)'}
@@ -26,16 +26,16 @@ const BurgerConstructor = (props) => {
             type="top"
           />
           </div>
-        <div className={`${styles.constructor_scroll}`}>
-        {props.data.map((x, i)=>(
-            selectedIngredientIds.includes(x._id) && x.type!='bun' ?
-            <div key={i} className={`${styles.burger_inner_item} ml-4 mr-4 mb-4 `}>
+        <div className={`${styles.list}`}>
+        {data.map((ingredient, i)=>(
+            selectedIngredientIds.includes(ingredient._id) && ingredient.type!='bun' ?
+            <div key={i} className={`${styles.ingredient} ml-4 mr-4 mb-4 `}>
               <DragIcon type="primary" />
               <i className='ml-2'/>
               <ConstructorElement
-              text={x.name}
-              price={x.price}          
-              thumbnail={x.image}
+              text={ingredient.name}
+              price={ingredient.price}          
+              thumbnail={ingredient.image}
               />
             </div>
             :
@@ -51,7 +51,7 @@ const BurgerConstructor = (props) => {
             type="bottom"
           />
           </div>
-          <div className={`${styles.send_order} mt-10 mr-8`}>
+          <div className={`${styles.sendOrder} mt-10 mr-8`}>
             <span className="text text_type_digits-medium mr-10">610 <CurrencyIcon type="primary" /></span> 
             <Button type="primary" size="large" onClick={handleClick}>
               Оформить заказ
@@ -64,5 +64,6 @@ const BurgerConstructor = (props) => {
 export default BurgerConstructor;
 
 BurgerConstructor.propTypes = {
-  data: PropTypes.arrayOf(dataBurgerPropTypes.isRequired)
+  data: PropTypes.arrayOf(dataBurgerPropTypes),
+  setModal: PropTypes.func.isRequired
 };
