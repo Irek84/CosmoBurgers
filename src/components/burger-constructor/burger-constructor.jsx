@@ -1,35 +1,41 @@
 import React from 'react';
 import styles from './burger-constructor.module.css';
 import {DragIcon, CurrencyIcon, ConstructorElement, Button} from '@ya.praktikum/react-developer-burger-ui-components'
-import {dataBurgerPropTypes} from '../../utils/data';
+import OrderDetails from '../order-details/order-details';
+import {dataBurgerPropTypes, selectedIngredientIds, selectedBunId} from '../../utils/properties';
 import PropTypes from 'prop-types';
 
-const BurgerConstructor = (props) => {  
-    const selectedBunId = '60666c42cc7b410027a1a9b1';
-    const bunTop = props.data.find(x=>x.id=selectedBunId);
-    const bunBottom = props.data.find(x=>x.id=selectedBunId);
-    const selectedIngredientIds = ['60666c42cc7b410027a1a9b9', '60666c42cc7b410027a1a9bd', '60666c42cc7b410027a1a9bf','60666c42cc7b410027a1a9b4', '60666c42cc7b410027a1a9b5','60666c42cc7b410027a1a9be'];
+const BurgerConstructor = ({setModal, data}) => {  
+    const bun = data.find(ingredient=>ingredient._id==selectedBunId);
+    
+    const handleClick = () => {
+      setModal({
+        visible: true,
+        content: <OrderDetails orderNumber='034536'/>
+      })
+    }
+    
     return (
-      <div className={`${styles.constructor_block}`}>
+      <div className={`${styles.component}`}>
           <div className="mb-4 ml-4 mr-4 pl-8 mt-25">
           <ConstructorElement
-            text={bunTop.name + ' (верх)'}
-            price={bunTop.price}          
-            thumbnail={bunTop.image}
+            text={bun.name + ' (верх)'}
+            price={bun.price}          
+            thumbnail={bun.image}
             isLocked='true'
             type="top"
           />
           </div>
-        <div className={`${styles.constructor_scroll}`}>
-        {props.data.map((x, i)=>(
-            selectedIngredientIds.includes(x._id) ?
-            <div key={i} className={`${styles.burger_inner_item} ml-4 mr-4 mb-4 `}>
+        <div className={`${styles.list}`}>
+        {data.map((ingredient, i)=>(
+            selectedIngredientIds.includes(ingredient._id) && ingredient.type!='bun' ?
+            <div key={i} className={`${styles.ingredient} ml-4 mr-4 mb-4 `}>
               <DragIcon type="primary" />
               <i className='ml-2'/>
               <ConstructorElement
-              text={x.name}
-              price={x.price}          
-              thumbnail={x.image}
+              text={ingredient.name}
+              price={ingredient.price}          
+              thumbnail={ingredient.image}
               />
             </div>
             :
@@ -38,16 +44,16 @@ const BurgerConstructor = (props) => {
           </div>
           <div className="ml-4 mt-4 mr-4 pl-8">
           <ConstructorElement
-            text={bunBottom.name + ' (низ)'}
-            price={bunBottom.price}          
-            thumbnail={bunBottom.image}
+            text={bun.name + ' (низ)'}
+            price={bun.price}          
+            thumbnail={bun.image}
             isLocked='true'
             type="bottom"
           />
           </div>
-          <div className={`${styles.send_order} mt-10 mr-8`}>
+          <div className={`${styles.sendOrder} mt-10 mr-8`}>
             <span className="text text_type_digits-medium mr-10">610 <CurrencyIcon type="primary" /></span> 
-            <Button type="primary" size="large">
+            <Button type="primary" size="large" onClick={handleClick}>
               Оформить заказ
             </Button>
           </div>
@@ -58,5 +64,6 @@ const BurgerConstructor = (props) => {
 export default BurgerConstructor;
 
 BurgerConstructor.propTypes = {
-  data: PropTypes.arrayOf(dataBurgerPropTypes.isRequired)
+  data: PropTypes.arrayOf(dataBurgerPropTypes),
+  setModal: PropTypes.func.isRequired
 };
