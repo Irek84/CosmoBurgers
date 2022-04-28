@@ -2,7 +2,7 @@
     width: 46%;
 }
 .list{
-    max-height: calc(100vh - 490px);
+    height: calc(100vh - 490px);
     overflow-x: hidden;
     overflow-y: scroll;
 }

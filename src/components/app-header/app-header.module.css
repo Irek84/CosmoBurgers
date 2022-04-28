@@ -32,3 +32,6 @@ nav>div>a{
 .active{
     color:white;
 }
+nav a{
+    text-decoration: none;
+}

@@ -38,7 +38,7 @@ const Modal = (props) => {
             </div>
           </div>
           
-          <div className={styles.modalContent}>
+          <div className={`${styles.modalContent} text text_type_main-default`}>
             {props.children}
           </div>
           
