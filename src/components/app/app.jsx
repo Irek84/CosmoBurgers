@@ -1,61 +1,77 @@
-import {useEffect, useState} from 'react';
+import React, { useEffect, useState, useReducer } from 'react';
 import styles from './app.module.css';
 import AppHeader from '../app-header/app-header';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import Modal from '../modal/modal';
-import {ROOT_API_URL} from '../../utils/properties';
+import { getIngredients } from '../../utils/api';
+import { ConstructorContext, TotalPriceContext, OrderNumberContext } from '../../service/appContext';
+import { constructorDataPrepare } from '../../utils/functions';
 
 function App() {
-  const [data, setData] = useState([]);
+  const [ingredientData, setIngredientData] = useState([]);
+  const [constructorData, setConstructorData] = useState({ bun: null, ingredients: [] });
+  const [orderNumber, setOrderNumber] = useState(0);
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [modal, setModal] = useState({
-		visible: false,
+    visible: false,
     title: null,
-		content: null
-	});
+    content: null
+  });
 
-  const apiURL = ROOT_API_URL + '/ingredients';
+  const totalPriceInitialState = { totalPrice: 0 };
+  const [totalPriceState, totalPriceDispatcher] = useReducer(totalPriceReducer, totalPriceInitialState, undefined);
+  
+  function totalPriceReducer(state, action) {
+    switch (action.type) {
+      case "set":
+        return { totalPrice: action.payload };
+      case "reset":
+        return { totalPrice: totalPriceInitialState };
+      default:
+        throw new Error(`Wrong type of action: ${action.type}`);
+    }
+  }
 
-  useEffect(()=>{
-    fetch(apiURL)
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      }
-      throw new Error('Ошибка в сети');
-    })
-    .then(data => {
-      data.success?  
-      setData(data.data)
-      :
-        setHasError(true)
-      }
-    )
-    .finally(()=>{
-      setIsLoading(false);
-    })
-    .catch(e => {
-      setHasError(true);
-    });
-},[]);
+  useEffect(() => {
+    getIngredients()
+      .then((data) => {
+        setIngredientData(data);
+        setConstructorData(constructorDataPrepare(data))
+        setHasError(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      })
+      .catch(e => {
+        console.error(e)
+        setHasError(true);
+      });
+  }, []);
 
   return (
     <>
-      <AppHeader/>
+      <AppHeader />
       <main>
         <div>
-        {isLoading && <div className={`${styles.notification} text text_type_main-medium`}>Загрузка...</div>}
-        {hasError &&  <div className={`${styles.error} text text_type_main-medium`}>Произошла ошибка</div>}
-        {
-          !isLoading &&
-          !hasError &&
-          data.length && <>
-            <BurgerIngredients data={data} setModal={setModal}/>
-            <BurgerConstructor data={data} setModal={setModal}/>
+          {isLoading && <div className={`${styles.notification} text text_type_main-medium`}>Загрузка...</div>}
+          {hasError && <div className={`${styles.error} text text_type_main-medium`}>Произошла ошибка</div>}
+          {
+            !isLoading &&
+            !hasError &&
+            ingredientData.length &&
+            <>
+              <ConstructorContext.Provider value={{ ingredientData, constructorData }}>
+                <BurgerIngredients setModal={setModal} />
+                <TotalPriceContext.Provider value={{ totalPriceState, totalPriceDispatcher }}>
+                  <OrderNumberContext.Provider value={{ orderNumber, setOrderNumber }}>
+                    <BurgerConstructor setModal={setModal} />
+                  </OrderNumberContext.Provider>
+                </TotalPriceContext.Provider>
+              </ConstructorContext.Provider>
             </>
-        }
+          }
         </div>
         {modal.visible && <Modal setModal={setModal} title={modal.title}>{modal.content}</Modal>}
       </main>
