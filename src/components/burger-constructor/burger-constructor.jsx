@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import styles from './burger-constructor.module.css';
 import { DragIcon, CurrencyIcon, ConstructorElement, Button } from '@ya.praktikum/react-developer-burger-ui-components'
 import OrderDetails from '../order-details/order-details';
-import { ConstructorContext, TotalPriceContext, OrderNumberContext } from '../../service/appContext';
+import { ConstructorContext, TotalPriceContext, OrderNumberContext } from '../../services/appContext';
 import PropTypes from 'prop-types';
 import { createOrder } from '../../utils/api';
 

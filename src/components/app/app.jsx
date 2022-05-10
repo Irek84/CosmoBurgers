@@ -4,16 +4,29 @@ import AppHeader from '../app-header/app-header';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import Modal from '../modal/modal';
-import { getIngredients } from '../../utils/api';
-import { ConstructorContext, TotalPriceContext, OrderNumberContext } from '../../service/appContext';
-import { constructorDataPrepare } from '../../utils/functions';
+
+import { getIngredientsAction } from '../../services/actions/ingredients';
+import { useSelector, useDispatch } from 'react-redux';
+
+//import { getIngredients } from '../../utils/api';
+import { ConstructorContext, TotalPriceContext, OrderNumberContext } from '../../services/appContext';
+//import { constructorDataPrepare } from '../../utils/functions';
 
 function App() {
-  const [ingredientData, setIngredientData] = useState([]);
+	const { isLoading, hasError } = useSelector(store => store.ingredients);
+  const { isModalVisible, modalTitle, modalContent } = useSelector(store => store.modal)
+  
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch(getIngredientsAction())
+	}, [dispatch])
+
+  //const [ingredientData, setIngredientData] = useState([]);
   const [constructorData, setConstructorData] = useState({ bun: null, ingredients: [] });
   const [orderNumber, setOrderNumber] = useState(0);
-  const [hasError, setHasError] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  //const [hasError, setHasError] = useState(false);
+ // const [isLoading, setIsLoading] = useState(true);
   const [modal, setModal] = useState({
     visible: false,
     title: null,
@@ -34,21 +47,21 @@ function App() {
     }
   }
 
-  useEffect(() => {
-    getIngredients()
-      .then((data) => {
-        setIngredientData(data);
-        setConstructorData(constructorDataPrepare(data))
-        setHasError(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      })
-      .catch(e => {
-        console.error(e)
-        setHasError(true);
-      });
-  }, []);
+  // useEffect(() => {
+  //   getIngredients()
+  //     .then((data) => {
+  //       setIngredientData(data);
+  //       setConstructorData(constructorDataPrepare(data))
+  //       setHasError(false);
+  //     })
+  //     .finally(() => {
+  //       setIsLoading(false);
+  //     })
+  //     .catch(e => {
+  //       console.error(e)
+  //       setHasError(true);
+  //     });
+  // }, []);
 
   return (
     <>
@@ -60,10 +73,10 @@ function App() {
           {
             !isLoading &&
             !hasError &&
-            ingredientData.length &&
+            //ingredientData.length &&
             <>
-              <ConstructorContext.Provider value={{ ingredientData, constructorData }}>
-                <BurgerIngredients setModal={setModal} />
+             <BurgerIngredients/>
+              <ConstructorContext.Provider value={{ constructorData }}>
                 <TotalPriceContext.Provider value={{ totalPriceState, totalPriceDispatcher }}>
                   <OrderNumberContext.Provider value={{ orderNumber, setOrderNumber }}>
                     <BurgerConstructor setModal={setModal} />
@@ -73,7 +86,7 @@ function App() {
             </>
           }
         </div>
-        {modal.visible && <Modal setModal={setModal} title={modal.title}>{modal.content}</Modal>}
+        {isModalVisible && <Modal title={modalTitle}>{modalContent}</Modal>}
       </main>
     </>
   );

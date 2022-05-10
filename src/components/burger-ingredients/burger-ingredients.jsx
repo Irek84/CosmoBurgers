@@ -1,20 +1,24 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styles from './burger-ingredients.module.css';
 import { Tab, CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components'
 import IngredientDetails from '../ingredient-details/ingredient-details';
-import PropTypes from 'prop-types';
-import { ConstructorContext } from '../../service/appContext';
+//import { ConstructorContext } from '../../services/appContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { OPEN_MODAL } from '../../services/actions/modal';
 
-const BurgerIngredients = ({ setModal }) => {
+const BurgerIngredients = () => {
+  const dispatch = useDispatch();
   const [currentTab, setCurrentTab] = useState('buns')
-  const { ingredientData, constructorData } = useContext(ConstructorContext);
+//const { ingredientData, constructorData } = useContext(ConstructorContext);
 
+  const { ingredientData, constructorData } = useSelector(store => store.ingredients);
+  
   const handleClick = (data) => {
-    setModal({
-      visible: true,
-      title: "Детали ингредиента",
-      content: <IngredientDetails data={data} />
-    })
+    dispatch({
+			type: OPEN_MODAL,
+      modalTitle: "Детали ингредиента",
+			modalContent: <IngredientDetails data={data} />
+		})
   }
 
   const onTabClick = (tab) => {
@@ -48,7 +52,7 @@ const BurgerIngredients = ({ setModal }) => {
         <div className='text text_type_main-medium mt-10' id={typeId}>{title}</div>
         <ul className='mr-1'>
           {data.map(ingredient => (
-            <IngredientCard data={ingredient} key={ingredient._id} />
+            <IngredientCard data={ingredient} key={ingredient._id}/>
           ))}
         </ul>
       </>
@@ -88,14 +92,10 @@ const BurgerIngredients = ({ setModal }) => {
       <div className={`${styles.list}`}>
         <IngredientsTypeList title="Булки" data={buns} typeId="buns" />
         <IngredientsTypeList title="Соусы" data={sauces} typeId="sauces" />
-        <IngredientsTypeList title="Начинки" data={mains} typeId="mains" />
+        <IngredientsTypeList title="Начинки" data={mains} typeId="mains" /> 
       </div>
     </div >
   );
 }
 
 export default React.memo(BurgerIngredients);
-
-BurgerIngredients.propTypes = {
-  setModal: PropTypes.func.isRequired
-};
