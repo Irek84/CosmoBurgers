@@ -4,12 +4,17 @@ const checkResponse = (res) => {
     return res.ok ? res.json() : res.json().then((err) => Promise.reject(err))
 }
 
+const checkSuccess = (data) =>{
+    if (data?.success)
+        return data;
+    else
+        return Promise.reject(data);
+}
+
 export const getIngredients = async () => {
     const res = await fetch(ROOT_API_URL + '/ingredients');
     const data = await checkResponse(res);
-    if (data?.success)
-        return data.data;
-    return Promise.reject(data);
+    return (await checkSuccess(data)).data;
 }
 
 export const createOrder = async (ingredientIds) => {
@@ -24,7 +29,5 @@ export const createOrder = async (ingredientIds) => {
         })
     });
     const data = await checkResponse(res);
-    if (data?.success)
-        return data;
-    return Promise.reject(data);
+    return await checkSuccess(data);
 }

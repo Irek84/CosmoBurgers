@@ -63,7 +63,7 @@ const BurgerConstructor = () => {
   useEffect(
     () => {
       if (constructorData.ingredients.length > 0 || constructorData.bun) {
-        setTotalPrice(constructorData.ingredients?.reduce((sum, a) => sum + a.price, 0) + (constructorData?.bun?.price??0 * 2)) ;
+        setTotalPrice(constructorData.ingredients?.reduce((sum, a) => sum + a.price, 0) + (constructorData?.bun?.price??0)*2) ;
       }
     },
     [constructorData]
