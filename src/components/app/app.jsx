@@ -11,8 +11,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
+import { CLOSE_MODAL } from '../../services/actions/modal';
+import { CURRENT_VIEWED_INGREDIENT } from '../../services/actions/ingredients';
+
 function App() {
-  const { isLoading, hasError } = useSelector(store => store.ingredients);
+  const { isLoading, hasError, currentViewedIngredient} = useSelector(store => store.ingredients);
   const { isModalVisible, modalTitle, modalContent } = useSelector(store => store.modal)
 
   const dispatch = useDispatch();
@@ -20,6 +23,16 @@ function App() {
   useEffect(() => {
     dispatch(getIngredientsEnhancer())
   }, [dispatch])
+
+  const closeModal = () => {
+    dispatch({
+      type: CLOSE_MODAL
+    })
+    currentViewedIngredient && dispatch({
+      type: CURRENT_VIEWED_INGREDIENT,
+      item: null
+    })
+  }
 
   return (
     <>
@@ -40,7 +53,7 @@ function App() {
             </>
           }
         </div>
-        {isModalVisible && <Modal title={modalTitle}>{modalContent}</Modal>}
+        {isModalVisible && <Modal title={modalTitle} onClose={closeModal}>{modalContent}</Modal>}
       </main>
     </>
   );
