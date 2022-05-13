@@ -8,7 +8,8 @@ import { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { DELETE_INGREDIENT, REARRANGE_INGREDIENTS } from '../../services/actions/ingredients'
 
-const ConstructorIngredient = ({ ingredient, index }) => {
+const ConstructorIngredient = (props) => {
+  const { ingredient, index } = props;
   const dispatch = useDispatch();
   const removeConstructorIngredient = (id) => {
     dispatch({
@@ -58,7 +59,7 @@ const ConstructorIngredient = ({ ingredient, index }) => {
       return { ingredient, index }
     },
     collect: monitor => ({
-      opacity: monitor.isDragging() ? 0 : 1
+      opacity: monitor.isDragging() ? 0.3 : 1
     })
   });
 

@@ -13,10 +13,3 @@ export const dataBurgerPropTypes = PropTypes.shape({
   image_mobile: PropTypes.string.isRequired,
   image_large: PropTypes.string.isRequired,
 });
-
-//Тестовые наборы данных
-//const dataSet = { bun: '', ingredients: [] };
-//const dataSet = { bun: '60d3b41abdacab0026a733c7', ingredients: ['60d3b41abdacab0026a733cc', '60d3b41abdacab0026a733d0'] };
-const dataSet = { bun: '60d3b41abdacab0026a733c6', ingredients: ['60d3b41abdacab0026a733c8', '60d3b41abdacab0026a733ca', '60d3b41abdacab0026a733cc', '60d3b41abdacab0026a733d0', '60d3b41abdacab0026a733d1', '60d3b41abdacab0026a733c9'] };
-export const selectedBunId = dataSet.bun;
-export const selectedIngredientIds = dataSet.ingredients;
