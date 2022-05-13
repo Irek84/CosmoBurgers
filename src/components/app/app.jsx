@@ -1,67 +1,25 @@
-import React, { useEffect, useState, useReducer } from 'react';
+import React, { useEffect} from 'react';
 import styles from './app.module.css';
 import AppHeader from '../app-header/app-header';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import Modal from '../modal/modal';
 
-import { getIngredientsAction } from '../../services/actions/ingredients';
+import { getIngredientsEnhancer } from '../../services/actions/ingredients';
 import { useSelector, useDispatch } from 'react-redux';
 
-//import { getIngredients } from '../../utils/api';
-import { ConstructorContext, TotalPriceContext, OrderNumberContext } from '../../services/appContext';
-//import { constructorDataPrepare } from '../../utils/functions';
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 function App() {
-	const { isLoading, hasError } = useSelector(store => store.ingredients);
+  const { isLoading, hasError } = useSelector(store => store.ingredients);
   const { isModalVisible, modalTitle, modalContent } = useSelector(store => store.modal)
-  
-	const dispatch = useDispatch();
 
-	useEffect(() => {
-		dispatch(getIngredientsAction())
-	}, [dispatch])
+  const dispatch = useDispatch();
 
-  //const [ingredientData, setIngredientData] = useState([]);
-  const [constructorData, setConstructorData] = useState({ bun: null, ingredients: [] });
-  const [orderNumber, setOrderNumber] = useState(0);
-  //const [hasError, setHasError] = useState(false);
- // const [isLoading, setIsLoading] = useState(true);
-  const [modal, setModal] = useState({
-    visible: false,
-    title: null,
-    content: null
-  });
-
-  const totalPriceInitialState = { totalPrice: 0 };
-  const [totalPriceState, totalPriceDispatcher] = useReducer(totalPriceReducer, totalPriceInitialState, undefined);
-  
-  function totalPriceReducer(state, action) {
-    switch (action.type) {
-      case "set":
-        return { totalPrice: action.payload };
-      case "reset":
-        return { totalPrice: totalPriceInitialState };
-      default:
-        throw new Error(`Wrong type of action: ${action.type}`);
-    }
-  }
-
-  // useEffect(() => {
-  //   getIngredients()
-  //     .then((data) => {
-  //       setIngredientData(data);
-  //       setConstructorData(constructorDataPrepare(data))
-  //       setHasError(false);
-  //     })
-  //     .finally(() => {
-  //       setIsLoading(false);
-  //     })
-  //     .catch(e => {
-  //       console.error(e)
-  //       setHasError(true);
-  //     });
-  // }, []);
+  useEffect(() => {
+    dispatch(getIngredientsEnhancer())
+  }, [dispatch])
 
   return (
     <>
@@ -75,14 +33,10 @@ function App() {
             !hasError &&
             //ingredientData.length &&
             <>
-             <BurgerIngredients/>
-              <ConstructorContext.Provider value={{ constructorData }}>
-                <TotalPriceContext.Provider value={{ totalPriceState, totalPriceDispatcher }}>
-                  <OrderNumberContext.Provider value={{ orderNumber, setOrderNumber }}>
-                    <BurgerConstructor setModal={setModal} />
-                  </OrderNumberContext.Provider>
-                </TotalPriceContext.Provider>
-              </ConstructorContext.Provider>
+              <DndProvider backend={HTML5Backend}>
+                <BurgerIngredients />
+                <BurgerConstructor />
+              </DndProvider>
             </>
           }
         </div>

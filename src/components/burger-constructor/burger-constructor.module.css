@@ -1,18 +1,15 @@
 .component{
     width: 46%;
 }
-.list{
+
+.component ul{
     height: calc(100vh - 490px);
     overflow-x: hidden;
     overflow-y: scroll;
+    padding-right: 19px;
+    margin-left: -43px;
 }
-.ingredient{
-    display: flex;
-    align-items: center;
-}
-.ingredient:last-child{
-    margin-bottom: 0px;
-}
+
 .sendOrder{
     float: right;
     display: flex;

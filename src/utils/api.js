@@ -25,6 +25,6 @@ export const createOrder = async (ingredientIds) => {
     });
     const data = await checkResponse(res);
     if (data?.success)
-        return data.order.number;
+        return data;
     return Promise.reject(data);
 }

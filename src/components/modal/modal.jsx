@@ -6,6 +6,7 @@ import ModalOverlay from "../modal-overlay/modal-overlay";
 import styles from "./modal.module.css";
 import { useDispatch } from 'react-redux';
 import { CLOSE_MODAL } from '../../services/actions/modal';
+import { CURRENT_VIEWED_INGREDIENT } from '../../services/actions/ingredients';
 
 const modalRoot = document.getElementById("react-modals");
 
@@ -13,42 +14,46 @@ const Modal = (props) => {
   const dispatch = useDispatch();
 
   const closeModal = () => {
-		dispatch({
-			type: CLOSE_MODAL
-		})
-	}
+    dispatch({
+      type: CLOSE_MODAL
+    })
+    dispatch({
+      type: CURRENT_VIEWED_INGREDIENT,
+      item: {}
+    })
+  }
 
-  const closeModalEsc= (e) => {
+  const closeModalEsc = (e) => {
     if (e.key === "Escape")
-		  closeModal()
-	}
+      closeModal()
+  }
 
   useEffect(() => {
-		window.addEventListener('keydown', closeModalEsc)
-		return () => {
-			window.removeEventListener('keydown', closeModalEsc)
-		}
-	})
+    window.addEventListener('keydown', closeModalEsc)
+    return () => {
+      window.removeEventListener('keydown', closeModalEsc)
+    }
+  })
 
-    return ReactDOM.createPortal(
-      <>
-        <div className={styles.modal}>
-          <div className={styles.modalHeader}>
-            <h1 className="mt-10 pt-3 ml-10 text text_type_main-large">{props.title}</h1>
-            <div className={styles.closeButton} onClick={closeModal}>
-              <CloseIcon type="primary" />
-            </div>
+  return ReactDOM.createPortal(
+    <>
+      <div className={styles.modal}>
+        <div className={styles.modalHeader}>
+          <h1 className="mt-10 pt-3 ml-10 text text_type_main-large">{props.title}</h1>
+          <div className={styles.closeButton} onClick={closeModal}>
+            <CloseIcon type="primary" />
           </div>
-          
-          <div className={`${styles.modalContent} text text_type_main-default`}>
-            {props.children}
-          </div>
-          
         </div>
-        <ModalOverlay onClose={closeModal} />
-      </>,
-      modalRoot
-    );
+
+        <div className={`${styles.modalContent} text text_type_main-default`}>
+          {props.children}
+        </div>
+
+      </div>
+      <ModalOverlay onClose={closeModal} />
+    </>,
+    modalRoot
+  );
 }
 
 export default Modal;
