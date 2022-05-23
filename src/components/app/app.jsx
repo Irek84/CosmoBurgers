@@ -1,54 +1,38 @@
-import React, { useEffect, useState, useReducer } from 'react';
+import React, { useEffect} from 'react';
 import styles from './app.module.css';
 import AppHeader from '../app-header/app-header';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import Modal from '../modal/modal';
-import { getIngredients } from '../../utils/api';
-import { ConstructorContext, TotalPriceContext, OrderNumberContext } from '../../service/appContext';
-import { constructorDataPrepare } from '../../utils/functions';
+
+import { getIngredientsEnhancer } from '../../services/actions/ingredients';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+
+import { CLOSE_MODAL } from '../../services/actions/modal';
+import { CURRENT_VIEWED_INGREDIENT } from '../../services/actions/ingredients';
 
 function App() {
-  const [ingredientData, setIngredientData] = useState([]);
-  const [constructorData, setConstructorData] = useState({ bun: null, ingredients: [] });
-  const [orderNumber, setOrderNumber] = useState(0);
-  const [hasError, setHasError] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [modal, setModal] = useState({
-    visible: false,
-    title: null,
-    content: null
-  });
+  const { isLoading, hasError, currentViewedIngredient} = useSelector(store => store.ingredients);
+  const { isModalVisible, modalTitle, modalContent } = useSelector(store => store.modal)
 
-  const totalPriceInitialState = { totalPrice: 0 };
-  const [totalPriceState, totalPriceDispatcher] = useReducer(totalPriceReducer, totalPriceInitialState, undefined);
-  
-  function totalPriceReducer(state, action) {
-    switch (action.type) {
-      case "set":
-        return { totalPrice: action.payload };
-      case "reset":
-        return { totalPrice: totalPriceInitialState };
-      default:
-        throw new Error(`Wrong type of action: ${action.type}`);
-    }
-  }
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    getIngredients()
-      .then((data) => {
-        setIngredientData(data);
-        setConstructorData(constructorDataPrepare(data))
-        setHasError(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      })
-      .catch(e => {
-        console.error(e)
-        setHasError(true);
-      });
-  }, []);
+    dispatch(getIngredientsEnhancer())
+  }, [dispatch])
+
+  const closeModal = () => {
+    dispatch({
+      type: CLOSE_MODAL
+    })
+    currentViewedIngredient && dispatch({
+      type: CURRENT_VIEWED_INGREDIENT,
+      item: null
+    })
+  }
 
   return (
     <>
@@ -60,20 +44,16 @@ function App() {
           {
             !isLoading &&
             !hasError &&
-            ingredientData.length &&
+            //ingredientData.length &&
             <>
-              <ConstructorContext.Provider value={{ ingredientData, constructorData }}>
-                <BurgerIngredients setModal={setModal} />
-                <TotalPriceContext.Provider value={{ totalPriceState, totalPriceDispatcher }}>
-                  <OrderNumberContext.Provider value={{ orderNumber, setOrderNumber }}>
-                    <BurgerConstructor setModal={setModal} />
-                  </OrderNumberContext.Provider>
-                </TotalPriceContext.Provider>
-              </ConstructorContext.Provider>
+              <DndProvider backend={HTML5Backend}>
+                <BurgerIngredients />
+                <BurgerConstructor />
+              </DndProvider>
             </>
           }
         </div>
-        {modal.visible && <Modal setModal={setModal} title={modal.title}>{modal.content}</Modal>}
+        {isModalVisible && <Modal title={modalTitle} onClose={closeModal}>{modalContent}</Modal>}
       </main>
     </>
   );

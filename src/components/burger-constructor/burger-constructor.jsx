@@ -1,72 +1,76 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './burger-constructor.module.css';
-import { DragIcon, CurrencyIcon, ConstructorElement, Button } from '@ya.praktikum/react-developer-burger-ui-components'
+import { CurrencyIcon, ConstructorElement, Button } from '@ya.praktikum/react-developer-burger-ui-components'
+import ConstructorIngredient from '../constructor-ingredient/constructor-ingredient';
 import OrderDetails from '../order-details/order-details';
-import { ConstructorContext, TotalPriceContext, OrderNumberContext } from '../../service/appContext';
-import PropTypes from 'prop-types';
-import { createOrder } from '../../utils/api';
+import { useDispatch, useSelector } from 'react-redux';
+import { useDrop } from 'react-dnd';
+import { ADD_INGREDIENT } from '../../services/actions/ingredients'
+import { OPEN_MODAL } from '../../services/actions/modal';
+import { createOrderEnhancer } from '../../services/actions/order';
 
-const BurgerConstructor = ({ setModal }) => {
-  const { constructorData } = useContext(ConstructorContext);
+const BurgerConstructor = () => {
+  const dispatch = useDispatch();
+  const [{ isHover }, dropTarget] = useDrop({
+    accept: 'ingredient',
+    drop(item) {
+      dispatch({
+        type: ADD_INGREDIENT,
+        item
+      })
+    },
+    collect: monitor => ({
+      isHover: monitor.isOver()
+    })
+  });
+
+  const { constructorData } = useSelector(store => store.ingredients);
+  const { order, orderError, orderIsLoading } = useSelector(store => store.order);
   const bun = constructorData.bun;
   const ingredients = constructorData.ingredients;
-  const { totalPriceState, totalPriceDispatcher } = useContext(TotalPriceContext);
-  const { orderNumber, setOrderNumber } = useContext(OrderNumberContext);
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleClick = () => {
-    setIsLoading(true);
-    setError(null);
-    createOrder(ingredients.map(ingredient => ingredient._id))
-      .then(setOrderNumber)
-      .finally(() => {
-        setIsLoading(false);
-      })
-      .catch(e => {
-        setError(e.message);
-      });
-  }
+  const handleClick = async () => {
+		const ingredientIds = [bun._id, ...ingredients.map(ingredient => ingredient._id)];
+		dispatch(createOrderEnhancer(ingredientIds));
+	}
 
   useEffect(
     () => {
-      if (orderNumber > 0) {
-        setModal({
-          visible: true,
-          content: <OrderDetails orderNumber={orderNumber} />
+      if (order?.order?.number > 0) {
+        dispatch({
+          type: OPEN_MODAL,
+          modalContent: <OrderDetails orderNumber={order.order.number}/>
         })
       }
     },
-    [orderNumber, setModal]
+    [order]
   );
 
   useEffect(
     () => {
-      if (error) {
-        setModal({
-          visible: true,
-          title: "Ошибка",
-          content: <div className='mt-20 mb-20'>Не удалось создать заказ: {error}</div>
-        });
+      if (orderError) {
+        dispatch({
+          type: OPEN_MODAL,
+          modalTitle: "Ошибка",
+          modalContent: <div className='mt-20 mb-20'>Не удалось создать заказ: {orderError}</div>
+        })
       }
     },
-    [error, setModal]
+    [orderError]
   );
 
+  const [totalPrice, setTotalPrice] = useState(0);
   useEffect(
     () => {
       if (constructorData.ingredients.length > 0 || constructorData.bun) {
-        totalPriceDispatcher({
-          type: 'set',
-          payload: constructorData.ingredients?.reduce((sum, a) => sum + a.price, 0) + constructorData.bun?.price * 2
-        });
+        setTotalPrice(constructorData.ingredients?.reduce((sum, a) => sum + a.price, 0) + (constructorData?.bun?.price??0)*2) ;
       }
     },
-    [constructorData, totalPriceDispatcher]
+    [constructorData]
   );
 
   return (
-    <div className={`${styles.component}`}>
+    <div className={`${styles.component} ${isHover ? styles.onHover : ''}`} ref={dropTarget}>
       <div className="mb-4 ml-4 mr-4 pl-8 mt-25">
         {
           bun && <ConstructorElement
@@ -78,19 +82,11 @@ const BurgerConstructor = ({ setModal }) => {
           />
         }
       </div>
-      <div className={`${styles.list}`}>
+      <ul>
         {ingredients.map((ingredient, i) => (
-          <div key={i} className={`${styles.ingredient} ml-4 mr-4 mb-4 `}>
-            <DragIcon type="primary" />
-            <i className='ml-2' />
-            <ConstructorElement
-              text={ingredient.name}
-              price={ingredient.price}
-              thumbnail={ingredient.image}
-            />
-          </div>
+          <ConstructorIngredient ingredient={ingredient} index={i} key={ingredient._uuid} />
         ))}
-      </div>
+      </ul>
       <div className="ml-4 mt-4 mr-4 pl-8">
         {
           bun && <ConstructorElement
@@ -104,14 +100,14 @@ const BurgerConstructor = ({ setModal }) => {
       </div>
       <div className={`${styles.sendOrder} mt-10 mr-8`}>
         <span className="text text_type_digits-medium mr-10">
-          {totalPriceState.totalPrice} <CurrencyIcon type="primary" />
+          {totalPrice} <CurrencyIcon type="primary" />
         </span>
         <Button
           type="primary"
           size="large"
           onClick={handleClick}
-          disabled={(isLoading || (constructorData.ingredients.length === 0 && constructorData.bun === null)) ? true : false}>
-          {isLoading ? "Оформление...." : "Оформить заказ"}
+          disabled={(orderIsLoading || (constructorData.ingredients.length === 0 && constructorData.bun === null)) ? true : false}>
+          {orderIsLoading ? "Оформление...." : "Оформить заказ"}
         </Button>
       </div>
     </div>
@@ -119,7 +115,3 @@ const BurgerConstructor = ({ setModal }) => {
 }
 
 export default React.memo(BurgerConstructor);
-
-BurgerConstructor.propTypes = {
-  setModal: PropTypes.func.isRequired
-};

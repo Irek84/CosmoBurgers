@@ -8,50 +8,43 @@ import styles from "./modal.module.css";
 const modalRoot = document.getElementById("react-modals");
 
 const Modal = (props) => {
-  const closeModal= () => {
-		props.setModal({
-			visible: false,
-      title: null,
-			content: null,
-		})
-	}
 
-  const closeModalEsc= (e) => {
+  const closeModalEsc = (e) => {
     if (e.key === "Escape")
-		      closeModal()
-	}
+    props.onClose()
+  }
 
   useEffect(() => {
-		window.addEventListener('keydown', closeModalEsc)
-		return () => {
-			window.removeEventListener('keydown', closeModalEsc)
-		}
-	})
+    window.addEventListener('keydown', closeModalEsc)
+    return () => {
+      window.removeEventListener('keydown', closeModalEsc)
+    }
+  })
 
-    return ReactDOM.createPortal(
-      <>
-        <div className={styles.modal}>
-          <div className={styles.modalHeader}>
-            <h1 className="mt-10 pt-3 ml-10 text text_type_main-large">{props.title}</h1>
-            <div className={styles.closeButton} onClick={closeModal}>
-              <CloseIcon type="primary" />
-            </div>
+  return ReactDOM.createPortal(
+    <>
+      <div className={styles.modal}>
+        <div className={styles.modalHeader}>
+          <h1 className="mt-10 pt-3 ml-10 text text_type_main-large">{props.title}</h1>
+          <div className={styles.closeButton} onClick={props.onClose}>
+            <CloseIcon type="primary" />
           </div>
-          
-          <div className={`${styles.modalContent} text text_type_main-default`}>
-            {props.children}
-          </div>
-          
         </div>
-        <ModalOverlay onClose={closeModal} />
-      </>,
-      modalRoot
-    );
+
+        <div className={`${styles.modalContent} text text_type_main-default`}>
+          {props.children}
+        </div>
+
+      </div>
+      <ModalOverlay onClose={props.onClose} />
+    </>,
+    modalRoot
+  );
 }
 
 export default Modal;
 
 Modal.propTypes = {
-  setModal: PropTypes.func.isRequired,
-  title: PropTypes.string
+  title: PropTypes.string,
+  onClose: PropTypes.func.isRequired
 };
