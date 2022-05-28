@@ -1,32 +1,51 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { NavLink, useRouteMatch } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import styles from './app-header.module.css';
-import {Logo, BurgerIcon, ListIcon, ProfileIcon} from '@ya.praktikum/react-developer-burger-ui-components'
+import { Logo, BurgerIcon, ListIcon, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 
 const AppHeader = () => {
+    const { userData } = useSelector(store => store.user);
+    const [userName, setUserName] = useState("Личный кабинет");
+    useEffect(
+        () => {
+            if (userData.name != "") {
+                setUserName(userData.name);
+            } else {
+                setUserName("Личный кабинет");
+            }
+        }
+        , [userData])
+    const isConstructor = !!useRouteMatch({ path: '/', exact: true });
+    const isFeed = !!useRouteMatch('/order-feed');
+    const isProfile = !!useRouteMatch('/profile');
     return (
-      <header>
-          <nav>
+        <header>
+            <nav>
                 <div>
-                    <a className={`${styles.active} pr-5 mt-4 mb-4`} href="/">
-                        <BurgerIcon/>
+                    <NavLink className={`pr-5 mt-4 mb-4`} to="/" activeClassName={styles.active} exact>
+                        <BurgerIcon type={isConstructor ? 'primary' : 'secondary'} />
                         <span className='text text_type_main-default pl-2'>Конструктор</span>
-                    </a>
-                    <a className='pr-5 pl-5 mt-4 mb-4'  href="/">
-                        <ListIcon type="secondary"/>
+                    </NavLink>
+                    <NavLink className='pr-5 pl-5 mt-4 mb-4' to="/order-feed" activeClassName={styles.active}>
+                        <ListIcon type={isFeed ? 'primary' : 'secondary'} />
                         <span className="text text_type_main-default pl-2">Лента заказов</span>
-                    </a>
+                    </NavLink>
                 </div>
                 <div>
-                    <Logo/>
-                </div> 
-                <div>
-                    <a className='pr-5 pl-5 mt-4 mb-4' href="/">
-                        <ProfileIcon type="secondary"/>
-                        <span className="text text_type_main-default pl-2">Личный кабинет</span>
-                    </a>
+                    <NavLink className={`pr-5 mt-4 mb-4`} to="/" activeClassName={styles.active}>
+                        <Logo />
+                    </NavLink>
+
                 </div>
-          </nav>
-      </header>
+                <div>
+                    <NavLink className='pr-5 pl-5 mt-4 mb-4' to="/profile" activeClassName={styles.active}>
+                        <ProfileIcon type={isProfile ? 'primary' : 'secondary'} />
+                        <span className="text text_type_main-default pl-2">{userName}</span>
+                    </NavLink>
+                </div>
+            </nav>
+        </header>
     );
 }
 

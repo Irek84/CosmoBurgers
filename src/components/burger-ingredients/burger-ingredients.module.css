@@ -42,3 +42,8 @@
     top:0;
     right: 10px;
 }
+
+.link{
+    color: inherit;
+    text-align: center;
+}

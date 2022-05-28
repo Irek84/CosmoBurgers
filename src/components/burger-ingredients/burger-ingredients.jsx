@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useRef } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import styles from './burger-ingredients.module.css';
 import { Tab, CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components'
 import IngredientDetails from '../ingredient-details/ingredient-details';
@@ -11,7 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 const BurgerIngredients = () => {
   const dispatch = useDispatch();
   const { ingredientData, constructorData } = useSelector(store => store.ingredients);
-
+  const location = useLocation();
   const handleClick = (data) => {
     dispatch({
       type: CURRENT_VIEWED_INGREDIENT,
@@ -88,6 +89,12 @@ const BurgerIngredients = () => {
     const opacity = isDrag ? 0.25 : 1;
     return (
       <li className='mt-6' onClick={() => handleClick(data)} ref={dragRef} style={{ opacity }}>
+        <Link
+            to={{
+                pathname: `/ingredients/${data._id}`,
+                state: { background: location }
+            }}
+            className={styles.link}>
         {constructorData &&
           count(data._id) > 0
           &&
@@ -97,6 +104,8 @@ const BurgerIngredients = () => {
         <img src={data.image} className="ml-4" alt={data.name}></img>
         <div className={`${styles.price} text text_type_digits-default mt-1 mb-1`}>{data.price}&nbsp;<CurrencyIcon /></div>
         <div className='text text_type_main-default'>{data.name}</div>
+            </Link>
+
       </li>
     );
   };

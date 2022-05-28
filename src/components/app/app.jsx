@@ -1,61 +1,89 @@
-import React, { useEffect} from 'react';
-import styles from './app.module.css';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Switch, Route, useHistory, useLocation } from 'react-router-dom';
+import ProtectedRoute from '../protected-route/protected-route';
+
 import AppHeader from '../app-header/app-header';
-import BurgerIngredients from '../burger-ingredients/burger-ingredients';
-import BurgerConstructor from '../burger-constructor/burger-constructor';
+import IngredientDetails from '../ingredient-details/ingredient-details';
+import OrderDetails from '../order-details/order-details';
 import Modal from '../modal/modal';
-
-import { getIngredientsEnhancer } from '../../services/actions/ingredients';
-import { useSelector, useDispatch } from 'react-redux';
-
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+import { useSelector,useDispatch } from 'react-redux';
+import { MainPage, LoginPage, ProfilePage, RegisterPage, ForgotPasswordPage, ResetPasswordPage, NotFound404} from '../../pages';
 
 import { CLOSE_MODAL } from '../../services/actions/modal';
 import { CURRENT_VIEWED_INGREDIENT } from '../../services/actions/ingredients';
+import { DELETE_ORDER } from '../../services/actions/order';
+import styles from './app.module.css';
 
 function App() {
-  const { isLoading, hasError, currentViewedIngredient} = useSelector(store => store.ingredients);
-  const { isModalVisible, modalTitle, modalContent } = useSelector(store => store.modal)
+  const ModalSwitch = () => {
+    const dispatch = useDispatch();
+    const location = useLocation();
+    const history = useHistory();
+//    const background = location.state && location.state.background;
+    let background = (history.action === 'PUSH' || history.action === 'REPLACE') && location.state && location.state.background;
+    const { currentViewedIngredient} = useSelector(store => store.ingredients);
+    const closeModal = () => {
+      dispatch({
+        type: CLOSE_MODAL
+      })
+      dispatch({
+        type: DELETE_ORDER
+      })
+      currentViewedIngredient && dispatch({
+        type: CURRENT_VIEWED_INGREDIENT,
+        item: null
+      })
+      history.replace({ pathname: '/'})
+    }
 
-  const dispatch = useDispatch();
+    return (
+      <div className={styles.app}>
+        <AppHeader />
 
-  useEffect(() => {
-    dispatch(getIngredientsEnhancer())
-  }, [dispatch])
+        <Switch location={background || location}>
+          <Route path="/" exact={true}>
+            <MainPage />
+          </Route>
+          <Route path='/ingredients/:id' exact={true}>
+            <IngredientDetails />
+          </Route>
+          <Route path="/login" exact={true}>
+            <LoginPage />
+          </Route>
+          <Route path="/register" exact={true}>
+            <RegisterPage />
+          </Route>
+          <Route path="/forgot-password" exact={true}>
+            <ForgotPasswordPage />
+          </Route>
+          <Route path="/reset-password" exact={true}>
+            <ResetPasswordPage />
+          </Route>
+          <ProtectedRoute path="/profile">
+            <ProfilePage />
+          </ProtectedRoute>
+          <Route>
+            <NotFound404 />
+          </Route>          
+        </Switch>
 
-  const closeModal = () => {
-    dispatch({
-      type: CLOSE_MODAL
-    })
-    currentViewedIngredient && dispatch({
-      type: CURRENT_VIEWED_INGREDIENT,
-      item: null
-    })
-  }
-
+        {background && (
+          <Route
+            path='/ingredients/:id'
+            children={
+              <Modal onClose={closeModal}>
+                <IngredientDetails />
+              </Modal>
+            }>
+          </Route>
+        )}
+      </div>
+    );
+  };
   return (
-    <>
-      <AppHeader />
-      <main>
-        <div>
-          {isLoading && <div className={`${styles.notification} text text_type_main-medium`}>Загрузка...</div>}
-          {hasError && <div className={`${styles.error} text text_type_main-medium`}>Произошла ошибка</div>}
-          {
-            !isLoading &&
-            !hasError &&
-            //ingredientData.length &&
-            <>
-              <DndProvider backend={HTML5Backend}>
-                <BurgerIngredients />
-                <BurgerConstructor />
-              </DndProvider>
-            </>
-          }
-        </div>
-        {isModalVisible && <Modal title={modalTitle} onClose={closeModal}>{modalContent}</Modal>}
-      </main>
-    </>
+    <Router>
+      <ModalSwitch />
+    </Router>
   );
 }
 

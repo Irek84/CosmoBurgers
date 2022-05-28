@@ -1,0 +1,23 @@
+main{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  main>div:first-child{
+    display: flex;
+    width: 1333px;
+  }
+  
+  .notification{
+    height: calc(100vh - 88px);
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .error{
+    composes: notification;
+    color:firebrick;
+  }

@@ -2,6 +2,7 @@ import {
 	CREATE_ORDER_REQUEST,
 	CREATE_ORDER_SUCCESS,
 	CREATE_ORDER_FAILED,
+	DELETE_ORDER,
 
 } from '../actions/order';
 
@@ -25,6 +26,9 @@ export const orderReducer = (state = initialState, action) => {
 		}
 		case CREATE_ORDER_FAILED: {
 			return { order: {}, orderIsLoading: false, orderError: action.error };
+		}
+		case DELETE_ORDER: {
+			return { ...state, order: {} };
 		}
 
 		default: {

@@ -23,7 +23,7 @@ const BurgerConstructor = () => {
       isHover: monitor.isOver()
     })
   });
-
+  const { isLogin } = useSelector(store => store.user);
   const { constructorData } = useSelector(store => store.ingredients);
   const { order, orderError, orderIsLoading } = useSelector(store => store.order);
   const bun = constructorData.bun;
@@ -106,7 +106,7 @@ const BurgerConstructor = () => {
           type="primary"
           size="large"
           onClick={handleClick}
-          disabled={(orderIsLoading || (constructorData.ingredients.length === 0 && constructorData.bun === null)) ? true : false}>
+          disabled={(!isLogin || orderIsLoading || (constructorData.ingredients.length === 0 && constructorData.bun === null)) ? true : false}>
           {orderIsLoading ? "Оформление...." : "Оформить заказ"}
         </Button>
       </div>
