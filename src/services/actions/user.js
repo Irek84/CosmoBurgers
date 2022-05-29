@@ -1,11 +1,4 @@
-import { ROOT_API_URL, passwordReset, setNewPassword, registerUser, loginUser, logoutUser, updateToken, getUser, updateUser } from '../../utils/api';
-
-var expires = (new Date(Date.now() + 20 * 60 * 1000)).toUTCString();
-export const setCookie = (name, value) =>
-	document.cookie = `${name}=${value};Expires=${expires}`;
-
-export const deleteCookie = (name) =>
-	document.cookie = `${name}=;Expires=${new Date(0).toUTCString()}`;
+import { passwordReset, setNewPassword, registerUser, loginUser, logoutUser, updateToken, getUser, updateUser, expiresAT, expiresRT, setCookie, getCookie, deleteCookie } from '../../utils/api';
 
 export const RESET_PASSWORD_REQUEST = 'RESET_PASSWORD_REQUEST';
 export const RESET_PASSWORD_SUCCESS = 'RESET_PASSWORD_SUCCESS';
@@ -53,7 +46,8 @@ export const resetPasswordEnhancer = (email) => {
 				});
 			} else {
 				dispatch({
-					type: RESET_PASSWORD_FAILED
+					type: RESET_PASSWORD_FAILED,
+					error: res.message
 				});
 			}
 		}).catch(err => {
@@ -99,8 +93,8 @@ export const registerUserEnhancer = (email, password, name) => {
 		})
 		registerUser(email, password, name).then((res) => {
 			if (res && res.success) {
-				localStorage.setItem('refreshToken', res.refreshToken);
-				setCookie('accessToken', res.accessToken);
+				setCookie('refreshToken', res.refreshToken, expiresRT);
+				setCookie('accessToken', res.accessToken, expiresAT);
 
 				dispatch({
 					type: REGISTER_USER_SUCCESS
@@ -127,8 +121,8 @@ export const loginUserEnhancer = (email, password) => {
 		})
 		loginUser(email, password).then((res) => {
 			if (res && res.success) {
-				localStorage.setItem('refreshToken', res.refreshToken);
-				setCookie('accessToken', res.accessToken);
+				setCookie('refreshToken', res.refreshToken, expiresRT);
+				setCookie('accessToken', res.accessToken, expiresAT);
 
 				dispatch({
 					type: LOGIN_USER_SUCCESS,
@@ -152,14 +146,14 @@ export const loginUserEnhancer = (email, password) => {
 
 export const logoutUserEnhancer = () => {
 	return function (dispatch) {
-		const tokenBody = { token: localStorage['refreshToken'] };
+		const tokenBody = { token: getCookie('refreshToken') };
 		dispatch({
 			type: LOGOUT_USER_REQUEST
 		})
 		logoutUser(tokenBody).then((res) => {
 			if (res && res.success) {
 				deleteCookie('accessToken');
-				localStorage.removeItem('refreshToken');
+				deleteCookie('refreshToken');
 
 				dispatch({
 					type: LOGOUT_USER_SUCCESS,
@@ -187,11 +181,11 @@ export const updateTokenEnhancer = () => {
 		});
 		updateToken().then((res) => {
 			if (res && res.success) {
-				localStorage.setItem('refreshToken', res.refreshToken);
-				const authToken = res.accessToken;
-				setCookie('accessToken', authToken);
+				setCookie('refreshToken', res.refreshToken, expiresRT);
+				setCookie('accessToken', res.accessToken, expiresAT);
 				dispatch({
 					type: REFRESH_TOKEN_SUCCESS,
+					user: res.user,
 				});
 			} else {
 				dispatch({
@@ -202,7 +196,7 @@ export const updateTokenEnhancer = () => {
 			}
 		}).catch((err) => {
 			deleteCookie('accessToken');
-			localStorage.removeItem('refreshToken');
+			deleteCookie('refreshToken');
 			dispatch({
 				type: REFRESH_TOKEN_FAILED,
 			});

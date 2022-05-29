@@ -1,9 +1,9 @@
 export const ROOT_API_URL = 'https://norma.nomoreparties.space/api';
 const headers = { 'Accept': 'application/json', 'Content-Type': 'application/json' };
-var expires = (new Date(Date.now() + 20 * 60 * 1000)).toUTCString();
-
-export const setCookie = (name, value) =>
-    document.cookie = `${name}=${value};Expires=${expires}`;
+export const expiresAT = (new Date(Date.now() + 20 * 60 * 1000)).toUTCString();
+export const expiresRT = (new Date(Date.now() + 20 * 60 * 100000)).toUTCString();
+export const setCookie = (name, value, expires) =>
+	document.cookie = `${name}=${value};Expires=${expires}`;
 export const getCookie = (name) => {
     const matches = document.cookie.match(
         new RegExp(
@@ -139,7 +139,7 @@ export const updateToken = async () => {
     const res = await fetch(`${ROOT_API_URL}/auth/token`, {
         method: 'POST',
         headers: headers,
-        body: JSON.stringify({ token: localStorage.getItem('refreshToken') }),
+        body: JSON.stringify({ token: getCookie('refreshToken') }),
     });
     return checkResponse(res);
 };
@@ -152,15 +152,14 @@ const fetchWithRefreshToken = (url, options) => {
                     if (err.message === 'jwt expired') {
                         return updateToken()
                             .then(res => {
-                                localStorage.setItem('refreshToken', res.refreshToken);
-                                const authToken = res.accessToken;
-                                setCookie('accessToken', authToken);
+                                setCookie('refreshToken', res.refreshToken, expiresRT);
+                                setCookie('accessToken', res.accessToken, expiresAT);
                                 options.headers.Authorization = res.accessToken;
                                 return fetch(url, options).then((res) => checkResponse(res))
                             })
                     } else {
                         deleteCookie('accessToken');
-                        localStorage.removeItem('refreshToken');
+                        deleteCookie('refreshToken');
                         // eslint-disable-next-line
                         location.reload()
                         return Promise.reject(err)

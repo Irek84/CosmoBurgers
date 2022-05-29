@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import styles from './burger-constructor.module.css';
 import { CurrencyIcon, ConstructorElement, Button } from '@ya.praktikum/react-developer-burger-ui-components'
 import ConstructorIngredient from '../constructor-ingredient/constructor-ingredient';
@@ -28,10 +29,15 @@ const BurgerConstructor = () => {
   const { order, orderError, orderIsLoading } = useSelector(store => store.order);
   const bun = constructorData.bun;
   const ingredients = constructorData.ingredients;
-
+  const history = useHistory(); 
   const handleClick = async () => {
-		const ingredientIds = [bun._id, ...ingredients.map(ingredient => ingredient._id)];
-		dispatch(createOrderEnhancer(ingredientIds));
+    if(isLogin){
+      const ingredientIds = [bun._id, ...ingredients.map(ingredient => ingredient._id)];
+      dispatch(createOrderEnhancer(ingredientIds));
+    }else{
+      history.replace({ pathname: '/login' });
+    }
+		
 	}
 
   useEffect(
@@ -43,7 +49,7 @@ const BurgerConstructor = () => {
         })
       }
     },
-    [order]
+    [order, dispatch]
   );
 
   useEffect(
@@ -56,7 +62,7 @@ const BurgerConstructor = () => {
         })
       }
     },
-    [orderError]
+    [orderError, dispatch]
   );
 
   const [totalPrice, setTotalPrice] = useState(0);
@@ -106,7 +112,7 @@ const BurgerConstructor = () => {
           type="primary"
           size="large"
           onClick={handleClick}
-          disabled={(!isLogin || orderIsLoading || (constructorData.ingredients.length === 0 && constructorData.bun === null)) ? true : false}>
+          disabled={(orderIsLoading || (constructorData.ingredients.length === 0 && constructorData.bun === null)) ? true : false}>
           {orderIsLoading ? "Оформление...." : "Оформить заказ"}
         </Button>
       </div>

@@ -127,14 +127,9 @@ export const userReducer = (state = initialState, action) => {
         case REGISTER_USER_SUCCESS: {
             return {
                 ...state,
-                // userData: {
-                //     ...state.userData,
-                //     name: action.name,
-                //     email: action.email
-                // },
                 registerUserRequest: false,
                 registerUserFailed: false,
-                isLogin: true
+                isLogin: false
             }
         }
         case REGISTER_USER_FAILED: {
@@ -210,8 +205,14 @@ export const userReducer = (state = initialState, action) => {
         case REFRESH_TOKEN_SUCCESS: {
             return {
                 ...state,
+                userData: {
+                    ...state.userData,
+                    name: action.user.name,
+                    email: action.user.email
+                },
                 refreshTokenRequest: false,
-                refreshTokenFailed: false
+                refreshTokenFailed: false,
+                isLogin: true
             }
         }
         case REFRESH_TOKEN_FAILED: {
@@ -238,6 +239,7 @@ export const userReducer = (state = initialState, action) => {
                 },
                 getUserFailed: false,
                 getUserRequest: false,
+                isLogin: true
             };
         }
         case GET_USER_FAILED: {
@@ -260,6 +262,7 @@ export const userReducer = (state = initialState, action) => {
                 },
                 updateUserFailed: false,
                 updateUserRequest: false,
+                isLogin: true
             };
         }
         case UPDATE_USER_FAILED: {

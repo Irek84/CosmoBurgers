@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { resetPasswordEnhancer, RESET_PASSWORD_SET_EMAIL } from '../services/actions/user';
 
@@ -8,33 +8,22 @@ import styles from './page.module.css';
 
 const ForgotPasswordPage = () => {
     const dispatch = useDispatch();
-    const {
-        resetPasswordRequest,
-        resetPasswordFailed,
-        resetPasswordEmail,
-        resetPasswordMessage
-    } = useSelector(store => store.user);
+    const { resetPasswordEmail } = useSelector(store => store.user);
 
-    const resetPassword = (e) => {
+    const resetPassword = useCallback((e) => {
         e.preventDefault()
         if (resetPasswordEmail.length)
             dispatch(resetPasswordEnhancer(resetPasswordEmail));
-    }
-    const setEmail = (e) => {   
+    },[dispatch, resetPasswordEmail]);
+
+    const setEmail = useCallback((e) => {
         dispatch({
             type: RESET_PASSWORD_SET_EMAIL,
             email: e.target.value
         });
-    }
-    const isAccessTokenExist = document.cookie.indexOf('accessToken=') !== -1;
+    },[dispatch])
 
     return (
-        isAccessTokenExist ?
-        <Redirect to={'/'} />
-        :
-        (!resetPasswordFailed && resetPasswordMessage) ?
-        <Redirect to={'/reset-password'} /> 
-        :
         <form className={styles.main} onSubmit={resetPassword}>
             <section className={styles.container}>
                 <h1 className='text_type_main-medium mb-6'>Восстановление пароля</h1>
@@ -45,7 +34,7 @@ const ForgotPasswordPage = () => {
                         name={'E-mail'}
                         size={'default'}
                         value={resetPasswordEmail || ""}
-                        onChange={(e) => setEmail(e)}
+                        onChange={setEmail}
                     />
                 </div>
 

@@ -7,15 +7,10 @@ import { Logo, BurgerIcon, ListIcon, ProfileIcon } from '@ya.praktikum/react-dev
 const AppHeader = () => {
     const { userData } = useSelector(store => store.user);
     const [userName, setUserName] = useState("Личный кабинет");
-    useEffect(
-        () => {
-            if (userData.name != "") {
-                setUserName(userData.name);
-            } else {
-                setUserName("Личный кабинет");
-            }
-        }
-        , [userData])
+    useEffect(() => {
+        const isUserNameExist = userData.name !== '';
+        setUserName(isUserNameExist ? userData.name : 'Личный кабинет');
+    }, [userData]);
     const isConstructor = !!useRouteMatch({ path: '/', exact: true });
     const isFeed = !!useRouteMatch('/order-feed');
     const isProfile = !!useRouteMatch('/profile');

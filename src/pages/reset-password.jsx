@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { Input, Button, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { setNewPasswordEnhancer } from '../services/actions/user';
 
@@ -8,10 +8,7 @@ import styles from './page.module.css';
 
 const ResetPasswordPage = () => {
     const dispatch = useDispatch();
-
-    const { setNewPasswordRequest, setNewPasswordFailed, setNewPasswordMessage, resetPasswordMessage } = useSelector(state => state.user);
     const [values, setValues] = useState({});
-
     const handleChange = (event) => {
         setValues(values => {
             return { ...values, [event.target.name]: event.target.value };
@@ -21,14 +18,8 @@ const ResetPasswordPage = () => {
         e.preventDefault();
         dispatch(setNewPasswordEnhancer(values.newPassword, values.token));
     }
-    const isAccessTokenExist = document.cookie.indexOf('accessToken=') !== -1;
+
     return (
-        isAccessTokenExist ?
-        <Redirect to={'/'} />
-        :
-        ((!setNewPasswordFailed && setNewPasswordMessage) || !resetPasswordMessage) ?
-        <Redirect to={'/login'} /> 
-        :
         <form className={styles.main} onSubmit={handleOnSubmit}>
             <section className={styles.container}>
                 <h1 className='text_type_main-medium mb-6'>Восстановление пароля</h1>
@@ -36,7 +27,7 @@ const ResetPasswordPage = () => {
                 <PasswordInput
                     placeholder={'Введите новый пароль'}
                     name={'newPassword'}
-                    onChange={(e) => handleChange(e)}
+                    onChange={handleChange}
                     value={values.newPassword || ''}
                 />
 
@@ -46,7 +37,7 @@ const ResetPasswordPage = () => {
                         placeholder={'Введите код из письма'}
                         name={'token'}
                         size={'default'}
-                        onChange={(e) => handleChange(e)}
+                        onChange={handleChange}
                         value={values.token || ''}
                     />
                 </div>

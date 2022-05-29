@@ -2,6 +2,8 @@ import styles from './ingredient-details.module.css';
 import React, { memo, useEffect, useState } from 'react';
 import { getIngredients } from '../../utils/api';
 import { useParams } from "react-router-dom";
+import PropTypes from 'prop-types';
+
 const NutritionFact = (props) => {
 	return (
 		<li>
@@ -11,7 +13,7 @@ const NutritionFact = (props) => {
 	)
 }
 
-const IngredientDetails = () => {
+const IngredientDetails = (props) => {
 
 	const [currentViewedIngredient, setCurrentViewedIngredient] = useState({
 		image_large: '',
@@ -21,8 +23,7 @@ const IngredientDetails = () => {
 		fat: '',
 		carbohydrates: '',
 		isLoading: false
-	}
-	)
+	})
 
 	let { id } = useParams();
 
@@ -58,6 +59,7 @@ const IngredientDetails = () => {
 
 	return (
 		<section className={styles.component}>
+			<h1 className="mt-10 pt-3 text text_type_main-large">{props.title}</h1>
 			<img src={currentViewedIngredient.image_large} alt={currentViewedIngredient.name} />
 			<div className="text text_type_main-medium mt-4 mb-8">{currentViewedIngredient.name}</div>
 			<ul className="text text_type_main-default text_color_inactive mb-15">
@@ -71,3 +73,7 @@ const IngredientDetails = () => {
 }
 
 export default memo(IngredientDetails);
+
+IngredientDetails.propTypes = {
+	title: PropTypes.string
+};

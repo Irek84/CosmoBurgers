@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { Input, Button, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { registerUserEnhancer } from '../services/actions/user';
 
@@ -8,8 +8,6 @@ import styles from './page.module.css';
 
 const RegisterPage = () => {
     const dispatch = useDispatch();
-
-    const { registerUserRequest, registerUserFailed } = useSelector(state => state.user);
     const [values, setValues] = useState({});
 
     const handleChange = (event) => {
@@ -21,11 +19,8 @@ const RegisterPage = () => {
         e.preventDefault();
         dispatch(registerUserEnhancer(values.email, values.password, values.name));
     }
-    const isAccessTokenExist = document.cookie.indexOf('accessToken=') !== -1;
+    
     return (
-        isAccessTokenExist ?
-        <Redirect to={'/'} />
-        :
         <form className={styles.main} onSubmit={handleOnSubmit}>
             <section className={styles.container}>
                 <h1 className='text text_type_main-medium mb-6'>Регистрация</h1>
@@ -35,7 +30,7 @@ const RegisterPage = () => {
                         placeholder={'Имя'}
                         name={'name'}
                         size={'default'}
-                        onChange={(e) => handleChange(e)}
+                        onChange={handleChange}
                         value={values.name || ''}
                     />
                 </div>
@@ -45,7 +40,7 @@ const RegisterPage = () => {
                         placeholder={'E-mail'}
                         name={'email'}
                         size={'default'}
-                        onChange={(e) => handleChange(e)}
+                        onChange={handleChange}
                         value={values.email || ''}
                     />
                 </div>
@@ -53,7 +48,7 @@ const RegisterPage = () => {
                     <PasswordInput
                         placeholder={'Пароль'}
                         name={'password'}
-                        onChange={(e) => handleChange(e)}
+                        onChange={handleChange}
                         value={values.password || ''}
                     />
 

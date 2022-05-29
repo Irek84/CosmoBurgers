@@ -1,31 +1,17 @@
-import React from "react";
-import { useDispatch } from "react-redux";
 import { Route, Redirect } from 'react-router-dom';
-import { updateTokenEnhancer } from '../../services/actions/user';
-import PropTypes from 'prop-types';
 
-const ProtectedRoute = ({ children, ...rest }) => {
-    const dispatch = useDispatch();
-
-    const isAccessTokenExist = 
-        document.cookie.indexOf('accessToken=') !== -1;
-    const isRefreshTokenExist = 
-        localStorage['refreshToken'] !== undefined;
-
-    if(!isAccessTokenExist && isRefreshTokenExist)
-        dispatch(updateTokenEnhancer());
-
+const ProtectedRoute = ({ children, redirectСondition, redirectPath, ...rest }) => {
     return (
         <Route
             {...rest}
-            render={({location}) => isAccessTokenExist ? (
-                children 
-                ) : (
+            render={({ location }) => !redirectСondition ? (
+                children
+            ) : (
                 <Redirect to={{
-                    pathname: '/login',
+                    pathname: redirectPath,
                     state: { from: location }
                 }} />
-                )
+            )
             }
         />
     );

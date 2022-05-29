@@ -1,4 +1,4 @@
-import { memo, useState, useEffect } from 'react';
+import { memo, useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateUserEnhancer } from '../../services/actions/user';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -9,37 +9,35 @@ const UserProfile = () => {
 	const dispatch = useDispatch();
 
 	const { userData } = useSelector(store => store.user);
+	const [values, setValues] = useState({
+		name: userData ? userData.name : "",
+		email: userData ? userData.email : "",
+		password: "",
+	});
 
-	const [values, setValues] = useState({});
-
-	const [isUseOldValues, setIsUseOldValues] = useState(true);
 	const [isFormChange, setIsFormChange] = useState(false);
 
-	useEffect(() => {
-		if (userData.name !== undefined && userData.name !== "" && isUseOldValues) {
-			setValues({ "name": userData.name, "email": userData.email });
-			setIsUseOldValues(false);
-		}
-	}, [userData, setIsUseOldValues, setValues]);
-
-	const handleChange = (event) => {
+	const handleChange = useCallback((event) => {
 		setIsFormChange(true);
 		setValues(values => {
 			return { ...values, [event.target.name]: event.target.value };
 		});
-	};
-	const handleOnSubmit = async (e) => {
+	}, []);
+
+	const handleOnSubmit = useCallback(async (e) => {
 		e.preventDefault();
 		dispatch(updateUserEnhancer(values.name, values.email, values.password));
 		setIsFormChange(false);
-	}
-	const handleCancel = async (e) => {
+		setValues({ ...values, password: "" });
+	}, [dispatch, values]);
+
+	const handleCancel = useCallback(async (e) => {
 		e.preventDefault();
 		setIsFormChange(false);
 		setValues(values => {
 			return { ...values, "name": userData.name, "email": userData.email };
 		});
-	}
+	}, [userData.name, userData.email]);
 
 	return (
 		<form className={`${styles.container} text`} onSubmit={handleOnSubmit}>
@@ -50,7 +48,7 @@ const UserProfile = () => {
 				icon={'EditIcon'}
 				size={'default'}
 				value={values.name || ""}
-				onChange={(e) => handleChange(e)}
+				onChange={handleChange}
 			/>
 
 			<div className='mt-6 mb-6'>
@@ -61,7 +59,7 @@ const UserProfile = () => {
 					icon={'EditIcon'}
 					size={'default'}
 					value={values.email || ""}
-					onChange={(e) => handleChange(e)}
+					onChange={handleChange}
 				/>
 			</div>
 			<Input
@@ -71,7 +69,7 @@ const UserProfile = () => {
 				icon={'EditIcon'}
 				size={'default'}
 				value={values.password || ""}
-				onChange={(e) => handleChange(e)}
+				onChange={handleChange}
 			/>
 			<section className='mt-6' style={{ visibility: isFormChange ? "visible" : "hidden" }}>
 				<Button
