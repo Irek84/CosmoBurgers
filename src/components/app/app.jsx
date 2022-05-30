@@ -1,61 +1,149 @@
-import React, { useEffect} from 'react';
-import styles from './app.module.css';
-import AppHeader from '../app-header/app-header';
-import BurgerIngredients from '../burger-ingredients/burger-ingredients';
-import BurgerConstructor from '../burger-constructor/burger-constructor';
-import Modal from '../modal/modal';
+import React, { useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  useHistory,
+  useLocation,
+} from "react-router-dom";
+import ProtectedRoute from "../protected-route/protected-route";
 
-import { getIngredientsEnhancer } from '../../services/actions/ingredients';
-import { useSelector, useDispatch } from 'react-redux';
+import AppHeader from "../app-header/app-header";
+import IngredientDetails from "../ingredient-details/ingredient-details";
 
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+import Modal from "../modal/modal";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  MainPage,
+  LoginPage,
+  ProfilePage,
+  RegisterPage,
+  ForgotPasswordPage,
+  ResetPasswordPage,
+  NotFound404,
+} from "../../pages";
 
-import { CLOSE_MODAL } from '../../services/actions/modal';
-import { CURRENT_VIEWED_INGREDIENT } from '../../services/actions/ingredients';
+import { CLOSE_MODAL } from "../../services/actions/modal";
+import { CURRENT_VIEWED_INGREDIENT } from "../../services/actions/ingredients";
+import { DELETE_ORDER } from "../../services/actions/order";
+import { checkUserAuth } from "../../services/actions/user";
+import styles from "./app.module.css";
 
 function App() {
-  const { isLoading, hasError, currentViewedIngredient} = useSelector(store => store.ingredients);
-  const { isModalVisible, modalTitle, modalContent } = useSelector(store => store.modal)
+  const ModalSwitch = () => {
+    const dispatch = useDispatch();
+    const location = useLocation();
+    const history = useHistory();
+    let background =
+      (history.action === "PUSH" || history.action === "REPLACE") &&
+      location.state &&
+      location.state.background;
+    const { currentViewedIngredient } = useSelector(
+      (store) => store.ingredients
+    );
+    const closeModal = () => {
+      dispatch({
+        type: CLOSE_MODAL,
+      });
+      dispatch({
+        type: DELETE_ORDER,
+      });
+      currentViewedIngredient &&
+        dispatch({
+          type: CURRENT_VIEWED_INGREDIENT,
+          item: null,
+        });
+      history.replace({ pathname: "/" });
+    };
 
-  const dispatch = useDispatch();
+    const {
+      isAuthenthicated,
+      resetPasswordFailed,
+      resetPasswordMessage,
+      setNewPasswordFailed,
+      setNewPasswordMessage,
+    } = useSelector((store) => store.user);
 
-  useEffect(() => {
-    dispatch(getIngredientsEnhancer())
-  }, [dispatch])
+    useEffect(() => {
+      dispatch(checkUserAuth());
+    }, [dispatch]);
 
-  const closeModal = () => {
-    dispatch({
-      type: CLOSE_MODAL
-    })
-    currentViewedIngredient && dispatch({
-      type: CURRENT_VIEWED_INGREDIENT,
-      item: null
-    })
-  }
+    return (
+      <div className={styles.app}>
+        <AppHeader />
 
+        <Switch location={background || location}>
+          <Route path="/" exact={true}>
+            <MainPage />
+          </Route>
+          <Route path="/ingredients/:id" exact={true}>
+            <IngredientDetails title="Детали ингредиента" />
+          </Route>
+          <ProtectedRoute
+            path="/login"
+            redirectСondition={isAuthenthicated}
+            redirectPath="/"
+          >
+            <LoginPage />
+          </ProtectedRoute>
+          <ProtectedRoute
+            path="/register"
+            redirectСondition={isAuthenthicated}
+            redirectPath="/"
+          >
+            <RegisterPage />
+          </ProtectedRoute>
+          <ProtectedRoute
+            path="/forgot-password"
+            redirectСondition={
+              isAuthenthicated
+                ? true
+                : !resetPasswordFailed && resetPasswordMessage
+            }
+            redirectPath={isAuthenthicated ? "/" : "/reset-password"}
+          >
+            <ForgotPasswordPage />
+          </ProtectedRoute>
+          <ProtectedRoute
+            path="/reset-password"
+            redirectСondition={
+              isAuthenthicated ||
+              (!setNewPasswordFailed && setNewPasswordMessage) ||
+              !resetPasswordMessage
+            }
+            redirectPath={isAuthenthicated ? "/" : "/login"}
+          >
+            <ResetPasswordPage />
+          </ProtectedRoute>
+          <ProtectedRoute
+            path="/profile"
+            redirectСondition={!isAuthenthicated}
+            redirectPath="/login"
+          >
+            <ProfilePage />
+          </ProtectedRoute>
+          <Route>
+            <NotFound404 />
+          </Route>
+        </Switch>
+
+        {background && (
+          <Route
+            path="/ingredients/:id"
+            children={
+              <Modal onClose={closeModal} title="Детали ингредиента">
+                <IngredientDetails />
+              </Modal>
+            }
+          ></Route>
+        )}
+      </div>
+    );
+  };
   return (
-    <>
-      <AppHeader />
-      <main>
-        <div>
-          {isLoading && <div className={`${styles.notification} text text_type_main-medium`}>Загрузка...</div>}
-          {hasError && <div className={`${styles.error} text text_type_main-medium`}>Произошла ошибка</div>}
-          {
-            !isLoading &&
-            !hasError &&
-            //ingredientData.length &&
-            <>
-              <DndProvider backend={HTML5Backend}>
-                <BurgerIngredients />
-                <BurgerConstructor />
-              </DndProvider>
-            </>
-          }
-        </div>
-        {isModalVisible && <Modal title={modalTitle} onClose={closeModal}>{modalContent}</Modal>}
-      </main>
-    </>
+    <Router>
+      <ModalSwitch />
+    </Router>
   );
 }
 

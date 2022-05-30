@@ -1,5 +1,5 @@
-body{
-  color:black;
+body {
+  color: black;
 }
 
 /* width */
@@ -9,15 +9,19 @@ body{
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #2F2F37;
+  background: #2f2f37;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #8585AD;
+  background: #8585ad;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+a {
+  text-decoration: none;
 }

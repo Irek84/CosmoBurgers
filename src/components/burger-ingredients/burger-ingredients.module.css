@@ -1,44 +1,49 @@
-.component{
-    width:51%;
+.component {
+  width: 51%;
 }
 
-.component ul{
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
+.component ul {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
-.component li{
-    position: relative;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    width: 47%;
-    cursor:pointer;
+.component li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 47%;
+  cursor: pointer;
 }
 
-.component li:nth-child(odd){
-    margin-right: calc(var(--offset-base-size)  * 6);
+.component li:nth-child(odd) {
+  margin-right: calc(var(--offset-base-size) * 6);
 }
 
-.list{
-    max-height: calc(100vh - 255px);
-    overflow-y: scroll;
-    overflow-x: hidden;
+.list {
+  max-height: calc(100vh - 255px);
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
-.price{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.price {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.tabs{
-    display: flex;
+.tabs {
+  display: flex;
 }
 
-.counter{
-    position: absolute;
-    top:0;
-    right: 10px;
+.counter {
+  position: absolute;
+  top: 0;
+  right: 10px;
+}
+
+.link {
+  color: inherit;
+  text-align: center;
 }

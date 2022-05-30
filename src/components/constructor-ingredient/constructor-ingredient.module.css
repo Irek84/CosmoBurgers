@@ -1,8 +1,8 @@
 .item {
-	width: 100%;
-	list-style-type: none;
-	display: flex;	
-	align-items: center;
-	gap: 10px;
-	cursor: move;
+  width: 100%;
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: move;
 }

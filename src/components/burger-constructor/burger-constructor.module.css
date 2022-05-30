@@ -1,17 +1,17 @@
-.component{
-    width: 46%;
+.component {
+  width: 46%;
 }
 
-.component ul{
-    height: calc(100vh - 490px);
-    overflow-x: hidden;
-    overflow-y: scroll;
-    padding-right: 19px;
-    margin-left: -43px;
+.component ul {
+  height: calc(100vh - 490px);
+  overflow-x: hidden;
+  overflow-y: scroll;
+  padding-right: 19px;
+  margin-left: -43px;
 }
 
-.sendOrder{
-    float: right;
-    display: flex;
-    align-items: center;
+.sendOrder {
+  float: right;
+  display: flex;
+  align-items: center;
 }
