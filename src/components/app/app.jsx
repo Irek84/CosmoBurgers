@@ -107,10 +107,9 @@ function App() {
           <ProtectedRoute
             path="/reset-password"
             redirectСondition={
-              isAuthenthicated
-                ? true
-                : (!setNewPasswordFailed && setNewPasswordMessage) ||
-                  !resetPasswordMessage
+              isAuthenthicated ||
+              (!setNewPasswordFailed && setNewPasswordMessage) ||
+              !resetPasswordMessage
             }
             redirectPath={isAuthenthicated ? "/" : "/login"}
           >

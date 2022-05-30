@@ -1,9 +1,5 @@
-
 const OrderHistory = () => {
-	return (
-		<>
-		</>
-	)
-}
+  return <></>;
+};
 
 export default OrderHistory;
