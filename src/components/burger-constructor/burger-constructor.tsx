@@ -13,7 +13,12 @@ import { useDrop } from "react-dnd";
 import { ADD_INGREDIENT } from "../../services/actions/ingredients";
 import { OPEN_MODAL } from "../../services/actions/modal";
 import { createOrderEnhancer } from "../../services/actions/order";
-
+import { IIngredientExtended } from "../../utils/types";
+declare module 'react' {
+  interface FunctionComponent<P = {}> {
+    (props: PropsWithChildren<P>, context?: any): ReactElement<any, any> | null;
+  }
+}
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
   const [{ isHover }, dropTarget] = useDrop({
@@ -28,21 +33,21 @@ const BurgerConstructor = () => {
       isHover: monitor.isOver(),
     }),
   });
-  const { isAuthenthicated } = useSelector((store) => store.user);
-  const { constructorData } = useSelector((store) => store.ingredients);
+  const { isAuthenthicated } = useSelector((store: any) => store.user);
+  const { constructorData } = useSelector((store: any) => store.ingredients);
   const { order, orderError, orderIsLoading } = useSelector(
-    (store) => store.order
+    (store: any) => store.order
   );
-  const bun = constructorData.bun;
-  const ingredients = constructorData.ingredients;
+  const bun: IIngredientExtended = constructorData.bun;
+  const ingredients: IIngredientExtended[] = constructorData.ingredients;
   const history = useHistory();
   const handleClick = async () => {
     if (isAuthenthicated) {
-      const ingredientIds = [
+      const ingredientIds: string[] = [
         bun._id,
         ...ingredients.map((ingredient) => ingredient._id),
       ];
-      dispatch(createOrderEnhancer(ingredientIds));
+      dispatch(createOrderEnhancer(ingredientIds) as any);
     } else {
       history.replace({ pathname: "/login" });
     }
@@ -71,11 +76,11 @@ const BurgerConstructor = () => {
     }
   }, [orderError, dispatch]);
 
-  const [totalPrice, setTotalPrice] = useState(0);
+  const [totalPrice, setTotalPrice] = useState<number>(0);
   useEffect(() => {
     if (constructorData.ingredients.length > 0 || constructorData.bun) {
       setTotalPrice(
-        constructorData.ingredients?.reduce((sum, a) => sum + a.price, 0) +
+        constructorData.ingredients?.reduce((sum: number, a: IIngredientExtended) => sum + a.price, 0) +
           (constructorData?.bun?.price ?? 0) * 2
       );
     } else {
@@ -94,13 +99,13 @@ const BurgerConstructor = () => {
             text={bun.name + " (верх)"}
             price={bun.price}
             thumbnail={bun.image}
-            isLocked="true"
+            isLocked={true}
             type="top"
           />
         )}
       </div>
       <ul>
-        {ingredients.map((ingredient, i) => (
+        {ingredients.map((ingredient: IIngredientExtended, i: number) => (
           <ConstructorIngredient
             ingredient={ingredient}
             index={i}
@@ -114,7 +119,7 @@ const BurgerConstructor = () => {
             text={bun.name + " (низ)"}
             price={bun.price}
             thumbnail={bun.image}
-            isLocked="true"
+            isLocked={true}
             type="bottom"
           />
         )}

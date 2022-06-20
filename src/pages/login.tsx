@@ -7,23 +7,23 @@ import {
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { loginUserEnhancer } from "../services/actions/user";
-
+import { TTarget } from "../utils/types";
 import styles from "./page.module.css";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
 
-  const { loginUserFailed } = useSelector((state) => state.user);
-  const [values, setValues] = useState({});
+  const { loginUserFailed } = useSelector((store: any) => store.user);
+  const [values, setValues] = useState<{email:string, password: string}>({email:"", password: ""});
 
-  const handleChange = (event) => {
+  const handleChange = (event: TTarget) => {
     setValues((values) => {
       return { ...values, [event.target.name]: event.target.value };
     });
   };
-  const handleOnSubmit = async (e) => {
+  const handleOnSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-    dispatch(loginUserEnhancer(values.email, values.password));
+    dispatch(loginUserEnhancer(values.email, values.password) as any);
   };
 
   return (
@@ -42,7 +42,6 @@ const LoginPage = () => {
         </div>
         <div className="mb-6">
           <PasswordInput
-            placeholder={"Пароль"}
             name={"password"}
             onChange={handleChange}
             value={values.password || ""}

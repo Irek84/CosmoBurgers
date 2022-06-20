@@ -1,3 +1,5 @@
+import { TTokenBody, TCheckSuccess, TCreateOrder, TIngredientsData } from "./types";
+
 export const ROOT_API_URL = "https://norma.nomoreparties.space/api";
 const headers = {
   Accept: "application/json",
@@ -5,9 +7,9 @@ const headers = {
 };
 export const expiresAT = new Date(Date.now() + 20 * 60 * 1000).toUTCString();
 export const expiresRT = new Date(Date.now() + 20 * 60 * 100000).toUTCString();
-export const setCookie = (name, value, expires) =>
+export const setCookie = (name: string, value: string, expires: string) =>
   (document.cookie = `${name}=${value};Expires=${expires}`);
-export const getCookie = (name) => {
+export const getCookie = (name: string) => {
   const matches = document.cookie.match(
     new RegExp(
       "(?:^|; )" +
@@ -18,14 +20,14 @@ export const getCookie = (name) => {
   return matches ? decodeURIComponent(matches[1]) : undefined;
 };
 
-export const deleteCookie = (name) =>
+export const deleteCookie = (name: string) =>
   (document.cookie = `${name}=;Expires=${new Date(0).toUTCString()}`);
 
-const checkResponse = (res) => {
-  return res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
+const checkResponse = (res: Response) => {
+  return res.ok ? res.json() : res.json().then((err: string) => Promise.reject(err));
 };
 
-const checkSuccess = (data) => {
+const checkSuccess = <T>(data: TCheckSuccess<T>)  => {
   if (data?.success) return data;
   else return Promise.reject(data);
 };
@@ -33,10 +35,10 @@ const checkSuccess = (data) => {
 export const getIngredients = async () => {
   const res = await fetch(ROOT_API_URL + "/ingredients");
   const data = await checkResponse(res);
-  return (await checkSuccess(data)).data;
+  return (await checkSuccess<TIngredientsData>(data)).data;
 };
 
-export const createOrder = async (ingredientIds) => {
+export const createOrder = async (ingredientIds: string) => {
   const res = await fetch(ROOT_API_URL + "/orders", {
     method: "POST",
     headers: headers,
@@ -45,10 +47,10 @@ export const createOrder = async (ingredientIds) => {
     }),
   });
   const data = await checkResponse(res);
-  return await checkSuccess(data);
+  return await checkSuccess<TCreateOrder>(data);
 };
 
-export const passwordReset = async (email) => {
+export const passwordReset = async (email: string) => {
   const res = await fetch(ROOT_API_URL + "/password-reset", {
     method: "POST",
     headers: headers,
@@ -60,7 +62,7 @@ export const passwordReset = async (email) => {
   return await checkSuccess(data);
 };
 
-export const setNewPassword = async (newPassword, token) => {
+export const setNewPassword = async (newPassword: string, token: string) => {
   const res = await fetch(ROOT_API_URL + "/password-reset/reset", {
     method: "POST",
     headers: headers,
@@ -73,7 +75,11 @@ export const setNewPassword = async (newPassword, token) => {
   return await checkSuccess(data);
 };
 
-export const registerUser = async (email, password, name) => {
+export const registerUser = async (
+  email: string,
+  password: string,
+  name: string
+) => {
   const res = await fetch(ROOT_API_URL + "/auth/register", {
     method: "POST",
     headers: headers,
@@ -87,7 +93,7 @@ export const registerUser = async (email, password, name) => {
   return await checkSuccess(data);
 };
 
-export const loginUser = async (email, password) => {
+export const loginUser = async (email: string, password: string) => {
   const res = await fetch(ROOT_API_URL + "/auth/login ", {
     method: "POST",
     headers: headers,
@@ -100,7 +106,7 @@ export const loginUser = async (email, password) => {
   return await checkSuccess(data);
 };
 
-export const logoutUser = async (tokenBody) => {
+export const logoutUser = async (tokenBody: TTokenBody) => {
   const res = await fetch(ROOT_API_URL + "/auth/logout ", {
     method: "POST",
     headers: headers,
@@ -111,24 +117,30 @@ export const logoutUser = async (tokenBody) => {
 };
 
 export const getUser = () => {
+  const requestHeaders: HeadersInit = new Headers();
+  requestHeaders.set('Content-Type', 'application/json');
+  requestHeaders.set('Accept', 'application/json');
+  requestHeaders.set('Authorization', getCookie("accessToken")??"");
   return fetchWithRefreshToken(ROOT_API_URL + "/auth/user", {
     method: "GET",
-    headers: {
-      ...headers,
-      Authorization: getCookie("accessToken"),
-    },
+    headers: requestHeaders,
     redirect: "follow",
     referrerPolicy: "no-referrer",
   });
 };
 
-export const updateUser = (data) => {
+export const updateUser = (data: {
+  name: string;
+  email: string;
+  password: string;
+}) => {
+  const requestHeaders: HeadersInit = new Headers();
+  requestHeaders.set('Content-Type', 'application/json');
+  requestHeaders.set('Accept', 'application/json');
+  requestHeaders.set('Authorization', getCookie("accessToken")??"");
   return fetchWithRefreshToken(ROOT_API_URL + "/auth/user", {
     method: "PATCH",
-    headers: {
-      ...headers,
-      Authorization: getCookie("accessToken"),
-    },
+    headers: requestHeaders,
     body: JSON.stringify(data),
     redirect: "follow",
     referrerPolicy: "no-referrer",
@@ -144,16 +156,19 @@ export const updateToken = async () => {
   return checkResponse(res);
 };
 
-const fetchWithRefreshToken = (url, options) => {
+const fetchWithRefreshToken = (url: string, options: RequestInit) => {
   return fetch(url, options)
     .then((res) => checkResponse(res))
     .catch((res) => {
-      return res.json().then((err) => {
+      return res.json().then((err: { message: string }) => {
         if (err.message === "jwt expired") {
           return updateToken().then((res) => {
             setCookie("refreshToken", res.refreshToken, expiresRT);
             setCookie("accessToken", res.accessToken, expiresAT);
-            options.headers.Authorization = res.accessToken;
+            if (options !== undefined) {
+              (options.headers as { [key: string]: string }).Authorization = res.accessToken;
+            }
+
             return fetch(url, options).then((res) => checkResponse(res));
           });
         } else {

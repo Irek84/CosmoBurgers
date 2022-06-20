@@ -5,22 +5,23 @@ import {
   Input,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import { TUser } from "../../utils/types";
 
 import styles from "./user-profile.module.css";
 
 const UserProfile = () => {
   const dispatch = useDispatch();
 
-  const { userData } = useSelector((store) => store.user);
-  const [values, setValues] = useState({
+  const { userData } = useSelector((store: any) => store.user);
+  const [values, setValues] = useState<TUser>({
     name: userData ? userData.name : "",
     email: userData ? userData.email : "",
     password: "",
   });
 
-  const [isFormChange, setIsFormChange] = useState(false);
+  const [isFormChange, setIsFormChange] = useState<boolean>(false);
 
-  const handleChange = useCallback((event) => {
+  const handleChange = useCallback((event: { target: { name: string; value: string; }; }) => {
     setIsFormChange(true);
     setValues((values) => {
       return { ...values, [event.target.name]: event.target.value };
@@ -28,9 +29,9 @@ const UserProfile = () => {
   }, []);
 
   const handleOnSubmit = useCallback(
-    async (e) => {
+    async (e: { preventDefault: () => void; }) => {
       e.preventDefault();
-      dispatch(updateUserEnhancer(values.name, values.email, values.password));
+      dispatch(updateUserEnhancer(values.name, values.email, values.password) as any);
       setIsFormChange(false);
       setValues({ ...values, password: "" });
     },
@@ -38,7 +39,7 @@ const UserProfile = () => {
   );
 
   const handleCancel = useCallback(
-    async (e) => {
+    async (e: { preventDefault: () => void; }) => {
       e.preventDefault();
       setIsFormChange(false);
       setValues((values) => {

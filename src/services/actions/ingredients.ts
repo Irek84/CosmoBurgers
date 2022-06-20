@@ -1,4 +1,5 @@
 import { getIngredients } from "../../utils/api";
+import { IIngredient } from "../../utils/types";
 export const GET_INGREDIENTS_REQUEST = "GET_INGREDIENTS_REQUEST";
 export const GET_INGREDIENTS_SUCCESS = "GET_INGREDIENTS_SUCCESS";
 export const GET_INGREDIENTS_FAILED = "GET_INGREDIENTS_FAILED";
@@ -11,7 +12,7 @@ export const CURRENT_VIEWED_INGREDIENT = "CURRENT_VIEWED_INGREDIENT";
 export const CLEAR_CONSTRUCTOR_DATA = "CLEAR_CONSTRUCTOR_DATA";
 
 export const getIngredientsEnhancer = () => {
-  return function (dispatch) {
+  return function (dispatch: any) {
     dispatch({
       type: GET_INGREDIENTS_REQUEST,
     });

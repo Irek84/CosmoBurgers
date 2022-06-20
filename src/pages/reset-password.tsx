@@ -7,20 +7,20 @@ import {
   PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { setNewPasswordEnhancer } from "../services/actions/user";
-
+import { TTarget, TNewPassword } from "../utils/types";
 import styles from "./page.module.css";
 
 const ResetPasswordPage = () => {
   const dispatch = useDispatch();
-  const [values, setValues] = useState({});
-  const handleChange = (event) => {
+  const [values, setValues] = useState<TNewPassword>({newPassword:"", token:""});
+  const handleChange = (event: TTarget) => {
     setValues((values) => {
       return { ...values, [event.target.name]: event.target.value };
     });
   };
-  const handleOnSubmit = async (e) => {
+  const handleOnSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-    dispatch(setNewPasswordEnhancer(values.newPassword, values.token));
+    dispatch(setNewPasswordEnhancer(values.newPassword, values.token) as any);
   };
 
   return (
@@ -29,7 +29,6 @@ const ResetPasswordPage = () => {
         <h1 className="text_type_main-medium mb-6">Восстановление пароля</h1>
 
         <PasswordInput
-          placeholder={"Введите новый пароль"}
           name={"newPassword"}
           onChange={handleChange}
           value={values.newPassword || ""}

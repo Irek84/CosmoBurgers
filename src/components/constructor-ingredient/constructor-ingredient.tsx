@@ -1,38 +1,43 @@
-import React, { useRef } from "react";
-import PropTypes from "prop-types";
+import React, { FC, MutableRefObject, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { useDrag, useDrop } from "react-dnd";
+import { DropTargetMonitor, useDrag, useDrop } from "react-dnd";
 import {
   DragIcon,
   ConstructorElement,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { dataBurgerPropTypes } from "../../utils/properties";
 import {
   DELETE_INGREDIENT,
   REARRANGE_INGREDIENTS,
 } from "../../services/actions/ingredients";
+import { IIngredientExtended } from "../../utils/types";
+
 import styles from "./constructor-ingredient.module.css";
 
-const ConstructorIngredient = (props) => {
+type TConstructorIngredient = {
+  ingredient: IIngredientExtended;
+  index: number;
+};
+
+const ConstructorIngredient: FC<TConstructorIngredient> = (props) => {
   const { ingredient, index } = props;
   const dispatch = useDispatch();
-  const removeConstructorIngredient = (id) => {
+  const removeConstructorIngredient = (id: string) => {
     dispatch({
       type: DELETE_INGREDIENT,
       id: id,
     });
   };
 
-  const ref = useRef(null);
+  const ref = useRef<HTMLLIElement>(null) as MutableRefObject<HTMLLIElement>;
 
-  const [{ handlerId }, drop] = useDrop({
+  const [handlerId, drop] = useDrop<IIngredientExtended>({
     accept: "draggedIngredient",
-    collect(monitor) {
+    collect(monitor: DropTargetMonitor) {
       return {
         handlerId: monitor.getHandlerId(),
       };
     },
-    hover(item, monitor) {
+    hover(item: IIngredientExtended, monitor: DropTargetMonitor) {
       if (!ref.current) return;
 
       const dragIndex = item.index;
@@ -44,24 +49,26 @@ const ConstructorIngredient = (props) => {
       const hoverMiddleY =
         (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
       const clientOffset = monitor.getClientOffset();
-      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+      if (clientOffset) {
+        const hoverClientY = clientOffset.y - hoverBoundingRect.top;
 
-      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) return;
-      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) return;
+        if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) return;
+        if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) return;
 
-      dispatch({
-        type: REARRANGE_INGREDIENTS,
-        fromIndex: dragIndex ?? index,
-        toIndex: hoverIndex,
-      });
+        dispatch({
+          type: REARRANGE_INGREDIENTS,
+          fromIndex: dragIndex ?? index,
+          toIndex: hoverIndex,
+        });
 
-      item.index = hoverIndex;
+        item.index = hoverIndex;
+      }
     },
   });
 
   const [{ opacity }, drag] = useDrag({
     type: "draggedIngredient",
-    ingredient: () => {
+    item: () => {
       return { ingredient, index };
     },
     collect: (monitor) => ({
@@ -91,8 +98,3 @@ const ConstructorIngredient = (props) => {
 };
 
 export default React.memo(ConstructorIngredient);
-
-ConstructorIngredient.propTypes = {
-  ingredient: dataBurgerPropTypes.isRequired,
-  index: PropTypes.number.isRequired,
-};

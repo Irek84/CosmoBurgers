@@ -10,15 +10,15 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
 const AppHeader = () => {
-  const { userData } = useSelector((store) => store.user);
-  const [userName, setUserName] = useState("Личный кабинет");
+  const { userData } = useSelector((store: any) => store.user);
+  const [userName, setUserName] = useState<string>("Личный кабинет");
   useEffect(() => {
-    const isUserNameExist = userData.name !== "";
+    const isUserNameExist: boolean = userData.name !== "";
     setUserName(isUserNameExist ? userData.name : "Личный кабинет");
   }, [userData]);
-  const isConstructor = !!useRouteMatch({ path: "/", exact: true });
-  const isFeed = !!useRouteMatch("/order-feed");
-  const isProfile = !!useRouteMatch("/profile");
+  const isConstructor: boolean = !!useRouteMatch({ path: "/", exact: true });
+  const isFeed: boolean = !!useRouteMatch("/order-feed");
+  const isProfile: boolean = !!useRouteMatch("/profile");
   return (
     <header>
       <nav>

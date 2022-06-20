@@ -27,19 +27,17 @@ import { CLOSE_MODAL } from "../../services/actions/modal";
 import { CURRENT_VIEWED_INGREDIENT } from "../../services/actions/ingredients";
 import { DELETE_ORDER } from "../../services/actions/order";
 import { checkUserAuth } from "../../services/actions/user";
+import { Location } from "history";
 import styles from "./app.module.css";
 
 function App() {
   const ModalSwitch = () => {
     const dispatch = useDispatch();
-    const location = useLocation();
+    const location = useLocation<{ background: Location }>();
     const history = useHistory();
-    let background =
-      (history.action === "PUSH" || history.action === "REPLACE") &&
-      location.state &&
-      location.state.background;
+    let background = location.state && location.state.background;
     const { currentViewedIngredient } = useSelector(
-      (store) => store.ingredients
+      (store: any) => store.ingredients
     );
     const closeModal = () => {
       dispatch({
@@ -62,10 +60,10 @@ function App() {
       resetPasswordMessage,
       setNewPasswordFailed,
       setNewPasswordMessage,
-    } = useSelector((store) => store.user);
+    } = useSelector((store: any) => store.user);
 
     useEffect(() => {
-      dispatch(checkUserAuth());
+      dispatch(checkUserAuth() as any);
     }, [dispatch]);
 
     return (

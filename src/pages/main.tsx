@@ -20,19 +20,19 @@ import styles from "./main.module.css";
 
 function MainPage() {
   const { isLoading, hasError, currentViewedIngredient } = useSelector(
-    (store) => store.ingredients
+    (store: any) => store.ingredients
   );
   const { isModalVisible, modalTitle, modalContent } = useSelector(
-    (store) => store.modal
+    (store: any) => store.modal
   );
   const { order } = useSelector(
-    (store) => store.order
+    (store: any) => store.order
   );
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getIngredientsEnhancer());
+    dispatch(getIngredientsEnhancer() as any);
   }, [dispatch]);
 
   const closeModal = () => {

@@ -1,10 +1,16 @@
 import styles from "./ingredient-details.module.css";
-import React, { memo, useEffect, useState } from "react";
+import React, { FC, memo, useEffect, useState } from "react";
 import { getIngredients } from "../../utils/api";
 import { useParams } from "react-router-dom";
-import PropTypes from "prop-types";
+import {
+  INutritionFact,
+  IIngredientDetails,
+  IParamTypes,
+  TCurrentViewedIngredient,
+  IIngredient,
+} from "../../utils/types";
 
-const NutritionFact = (props) => {
+const NutritionFact: FC<INutritionFact> = (props) => {
   return (
     <li>
       {props.name}
@@ -13,18 +19,19 @@ const NutritionFact = (props) => {
   );
 };
 
-const IngredientDetails = (props) => {
-  const [currentViewedIngredient, setCurrentViewedIngredient] = useState({
-    image_large: "",
-    name: "",
-    calories: "",
-    proteins: "",
-    fat: "",
-    carbohydrates: "",
-    isLoading: false,
-  });
+const IngredientDetails: FC<IIngredientDetails> = (props) => {
+  const [currentViewedIngredient, setCurrentViewedIngredient] =
+    useState<TCurrentViewedIngredient>({
+      image_large: "",
+      name: "",
+      calories: 0,
+      proteins: 0,
+      fat: 0,
+      carbohydrates: 0,
+      isLoading: false,
+    });
 
-  const { id } = useParams();
+  const { id } = useParams<IParamTypes>();
 
   useEffect(() => {
     setCurrentViewedIngredient((currentViewedIngredient) => {
@@ -35,16 +42,18 @@ const IngredientDetails = (props) => {
     });
     getIngredients()
       .then((data) => {
-        const ingredient = data.find((el) => el._id === id);
-        setCurrentViewedIngredient({
-          image_large: ingredient.image_large,
-          name: ingredient.name,
-          calories: ingredient.calories,
-          proteins: ingredient.proteins,
-          fat: ingredient.fat,
-          carbohydrates: ingredient.carbohydrates,
-          isLoading: false,
-        });
+        const ingredient = data.find((el: IIngredient) => el._id === id);
+        if (ingredient) {
+          setCurrentViewedIngredient({
+            image_large: ingredient.image_large,
+            name: ingredient.name,
+            calories: ingredient.calories,
+            proteins: ingredient.proteins,
+            fat: ingredient.fat,
+            carbohydrates: ingredient.carbohydrates,
+            isLoading: false,
+          });
+        }
       })
       .catch((err) => {
         console.error(err);
@@ -87,7 +96,3 @@ const IngredientDetails = (props) => {
 };
 
 export default memo(IngredientDetails);
-
-IngredientDetails.propTypes = {
-  title: PropTypes.string,
-};

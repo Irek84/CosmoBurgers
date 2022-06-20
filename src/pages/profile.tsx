@@ -16,10 +16,10 @@ import styles from "./profile.module.css";
 const ProfilePage = () => {
   const dispatch = useDispatch();
   const { path, url } = useRouteMatch();
-  const pathname = useLocation().pathname;
+  const pathname: string = useLocation().pathname;
 
   const onLogout = () => {
-    dispatch(logoutUserEnhancer());
+    dispatch(logoutUserEnhancer() as any);
   };
 
   return (
