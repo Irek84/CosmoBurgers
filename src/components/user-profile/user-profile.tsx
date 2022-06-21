@@ -1,4 +1,4 @@
-import { memo, useState, useCallback } from "react";
+import { memo, useState, useCallback, SyntheticEvent } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { updateUserEnhancer } from "../../services/actions/user";
 import {
@@ -21,17 +21,22 @@ const UserProfile = () => {
 
   const [isFormChange, setIsFormChange] = useState<boolean>(false);
 
-  const handleChange = useCallback((event: { target: { name: string; value: string; }; }) => {
-    setIsFormChange(true);
-    setValues((values) => {
-      return { ...values, [event.target.name]: event.target.value };
-    });
-  }, []);
+  const handleChange = useCallback(
+    (event: { target: { name: string; value: string } }) => {
+      setIsFormChange(true);
+      setValues((values) => {
+        return { ...values, [event.target.name]: event.target.value };
+      });
+    },
+    []
+  );
 
   const handleOnSubmit = useCallback(
-    async (e: { preventDefault: () => void; }) => {
+    async (e: SyntheticEvent) => {
       e.preventDefault();
-      dispatch(updateUserEnhancer(values.name, values.email, values.password) as any);
+      dispatch(
+        updateUserEnhancer(values.name, values.email, values.password) as any
+      );
       setIsFormChange(false);
       setValues({ ...values, password: "" });
     },
@@ -39,7 +44,7 @@ const UserProfile = () => {
   );
 
   const handleCancel = useCallback(
-    async (e: { preventDefault: () => void; }) => {
+    async (e: SyntheticEvent) => {
       e.preventDefault();
       setIsFormChange(false);
       setValues((values) => {

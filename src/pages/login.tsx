@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { SyntheticEvent, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import {
@@ -14,14 +14,17 @@ const LoginPage = () => {
   const dispatch = useDispatch();
 
   const { loginUserFailed } = useSelector((store: any) => store.user);
-  const [values, setValues] = useState<{email:string, password: string}>({email:"", password: ""});
+  const [values, setValues] = useState<{ email: string; password: string }>({
+    email: "",
+    password: "",
+  });
 
   const handleChange = (event: TTarget) => {
     setValues((values) => {
       return { ...values, [event.target.name]: event.target.value };
     });
   };
-  const handleOnSubmit = async (e: { preventDefault: () => void; }) => {
+  const handleOnSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     dispatch(loginUserEnhancer(values.email, values.password) as any);
   };

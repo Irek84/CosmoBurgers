@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { SyntheticEvent, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import {
@@ -13,16 +13,22 @@ import styles from "./page.module.css";
 
 const RegisterPage = () => {
   const dispatch = useDispatch();
-  const [values, setValues] = useState<TUser>({name:"", email: "", password:""});
+  const [values, setValues] = useState<TUser>({
+    name: "",
+    email: "",
+    password: "",
+  });
 
   const handleChange = (event: TTarget) => {
     setValues((values) => {
       return { ...values, [event.target.name]: event.target.value };
     });
   };
-  const handleOnSubmit = async (e: { preventDefault: () => void; }) => {
+  const handleOnSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    dispatch(registerUserEnhancer(values.email, values.password, values.name) as any);
+    dispatch(
+      registerUserEnhancer(values.email, values.password, values.name) as any
+    );
   };
 
   return (

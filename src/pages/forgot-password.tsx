@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { SyntheticEvent, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import {
@@ -17,7 +17,7 @@ const ForgotPasswordPage = () => {
   const { resetPasswordEmail } = useSelector((store: any) => store.user);
 
   const resetPassword = useCallback(
-    (e: { preventDefault: () => void; }) => {
+    (e: SyntheticEvent) => {
       e.preventDefault();
       if (resetPasswordEmail.length)
         dispatch(resetPasswordEnhancer(resetPasswordEmail) as any);
@@ -26,7 +26,7 @@ const ForgotPasswordPage = () => {
   );
 
   const setEmail = useCallback(
-    (e: { target: { value: string; }; }) => {
+    (e: { target: { value: string } }) => {
       dispatch({
         type: RESET_PASSWORD_SET_EMAIL,
         email: e.target.value,
