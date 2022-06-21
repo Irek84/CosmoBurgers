@@ -1,11 +1,14 @@
-import PropTypes from "prop-types";
 import styles from "./order-details.module.css";
 import { CheckMarkIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import vector1 from "../../images/vector1.svg";
 import vector2 from "../../images/vector2.svg";
 import vector3 from "../../images/vector3.svg";
+import { FC } from "react";
 
-const OrderDetails = (props) => {
+type TOrderDetails = {
+  orderNumber: number;
+}
+const OrderDetails: FC<TOrderDetails>  = (props) => {
   return (
     <section className={styles.component}>
       <h1 className="mt-20 mb-8 text text_type_digits-large">
@@ -18,7 +21,7 @@ const OrderDetails = (props) => {
         <img src={vector1} alt="фон" />
         <img src={vector2} alt="фон" />
         <img src={vector3} alt="фон" />
-        <CheckMarkIcon />
+        <CheckMarkIcon type={"secondary"} />
       </div>
       <div className="text text_type_main-default mt-15">
         Ваш заказ начали готовить
@@ -31,7 +34,3 @@ const OrderDetails = (props) => {
 };
 
 export default OrderDetails;
-
-OrderDetails.propTypes = {
-  orderNumber: PropTypes.number.isRequired,
-};

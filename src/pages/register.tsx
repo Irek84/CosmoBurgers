@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { SyntheticEvent, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import {
@@ -7,21 +7,28 @@ import {
   PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { registerUserEnhancer } from "../services/actions/user";
+import { TUser, TTarget } from "../utils/types";
 
 import styles from "./page.module.css";
 
 const RegisterPage = () => {
   const dispatch = useDispatch();
-  const [values, setValues] = useState({});
+  const [values, setValues] = useState<TUser>({
+    name: "",
+    email: "",
+    password: "",
+  });
 
-  const handleChange = (event) => {
+  const handleChange = (event: TTarget) => {
     setValues((values) => {
       return { ...values, [event.target.name]: event.target.value };
     });
   };
-  const handleOnSubmit = async (e) => {
+  const handleOnSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    dispatch(registerUserEnhancer(values.email, values.password, values.name));
+    dispatch(
+      registerUserEnhancer(values.email, values.password, values.name) as any
+    );
   };
 
   return (
@@ -50,7 +57,6 @@ const RegisterPage = () => {
         </div>
 
         <PasswordInput
-          placeholder={"Пароль"}
           name={"password"}
           onChange={handleChange}
           value={values.password || ""}

@@ -10,7 +10,7 @@ import Modal from "../components/modal/modal";
 import {
   getIngredientsEnhancer,
   CURRENT_VIEWED_INGREDIENT,
-  CLEAR_CONSTRUCTOR_DATA
+  CLEAR_CONSTRUCTOR_DATA,
 } from "../services/actions/ingredients";
 
 import { CLOSE_MODAL } from "../services/actions/modal";
@@ -20,19 +20,17 @@ import styles from "./main.module.css";
 
 function MainPage() {
   const { isLoading, hasError, currentViewedIngredient } = useSelector(
-    (store) => store.ingredients
+    (store: any) => store.ingredients
   );
   const { isModalVisible, modalTitle, modalContent } = useSelector(
-    (store) => store.modal
+    (store: any) => store.modal
   );
-  const { order } = useSelector(
-    (store) => store.order
-  );
+  const { order } = useSelector((store: any) => store.order);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getIngredientsEnhancer());
+    dispatch(getIngredientsEnhancer() as any);
   }, [dispatch]);
 
   const closeModal = () => {
@@ -49,7 +47,7 @@ function MainPage() {
       });
   };
   useEffect(() => {
-    if(order.success){
+    if (order.success) {
       dispatch({
         type: CLEAR_CONSTRUCTOR_DATA,
       });

@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useRef } from "react";
+import React, { useMemo, useState, useRef, MutableRefObject, FC, SyntheticEvent } from "react";
 import { Link, useLocation } from "react-router-dom";
 import styles from "./burger-ingredients.module.css";
 import {
@@ -6,42 +6,46 @@ import {
   CurrencyIcon,
   Counter,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import IngredientDetails from "../ingredient-details/ingredient-details";
-import { useSelector, useDispatch } from "react-redux";
-import { OPEN_MODAL } from "../../services/actions/modal";
-import { CURRENT_VIEWED_INGREDIENT } from "../../services/actions/ingredients";
+import { useSelector } from "react-redux";
 import { useDrag } from "react-dnd";
 import { v4 as uuidv4 } from "uuid";
+import {
+  IIngredient,
+  IIngredientTypeList,
+  IIngredientCard,
+} from "../../utils/types";
+
+declare module "react" {
+  interface FunctionComponent<P = {}> {
+    (props: PropsWithChildren<P>, context?: any): ReactElement<any, any> | null;
+  }
+}
 
 const BurgerIngredients = () => {
-  const dispatch = useDispatch();
   const { ingredientData, constructorData } = useSelector(
-    (store) => store.ingredients
+    (store: any) => store.ingredients
   );
   const location = useLocation();
-  const handleClick = (data) => {
-    dispatch({
-      type: CURRENT_VIEWED_INGREDIENT,
-      item: data,
-    });
-    dispatch({
-      type: OPEN_MODAL,
-      modalTitle: "Детали ингредиента",
-      modalContent: <IngredientDetails data={data} />,
-    });
-  };
-  const bunRef = useRef(null);
-  const sauceRef = useRef(null);
-  const mainRef = useRef(null);
+
+  const bunRef = useRef<HTMLParagraphElement>(
+    null
+  ) as MutableRefObject<HTMLParagraphElement>;
+  const sauceRef = useRef<HTMLParagraphElement>(
+    null
+  ) as MutableRefObject<HTMLParagraphElement>;
+  const mainRef = useRef<HTMLParagraphElement>(
+    null
+  ) as MutableRefObject<HTMLParagraphElement>;
+
   const [currentTab, setCurrentTab] = useState("buns");
 
-  const onTabClick = (tab) => {
+  const onTabClick = (tab: string) => {
     setCurrentTab(tab);
     const element = document.getElementById(tab);
     if (element) element.scrollIntoView({ behavior: "smooth" });
   };
 
-  const handleScroll = (e) => {
+  const handleScroll = (e: SyntheticEvent) => {
     const currentY = e.currentTarget.getBoundingClientRect().y + 50;
     const sauceY = sauceRef?.current?.getBoundingClientRect().y;
     const mainY = mainRef?.current?.getBoundingClientRect().y;
@@ -53,28 +57,43 @@ const BurgerIngredients = () => {
   };
 
   const buns = useMemo(
-    () => ingredientData.filter((ingredient) => ingredient.type === "bun"),
+    () =>
+      ingredientData.filter(
+        (ingredient: IIngredient) => ingredient.type === "bun"
+      ),
     [ingredientData]
   );
 
   const sauces = useMemo(
-    () => ingredientData.filter((ingredient) => ingredient.type === "sauce"),
+    () =>
+      ingredientData.filter(
+        (ingredient: IIngredient) => ingredient.type === "sauce"
+      ),
     [ingredientData]
   );
 
   const mains = useMemo(
-    () => ingredientData.filter((ingredient) => ingredient.type === "main"),
+    () =>
+      ingredientData.filter(
+        (ingredient: IIngredient) => ingredient.type === "main"
+      ),
     [ingredientData]
   );
 
-  const count = (id) => {
+  const count = (id: string) => {
     return (
-      constructorData.ingredients?.filter((ingredient) => ingredient._id === id)
-        .length + (constructorData.bun?._id === id ? 2 : 0)
+      constructorData.ingredients?.filter(
+        (ingredient: IIngredient) => ingredient._id === id
+      ).length + (constructorData.bun?._id === id ? 2 : 0)
     );
   };
 
-  const IngredientsTypeList = ({ title, data, typeId, innerRef }) => {
+  const IngredientsTypeList: FC<IIngredientTypeList> = ({
+    title,
+    data,
+    typeId,
+    innerRef,
+  }) => {
     return (
       <>
         <div
@@ -93,7 +112,7 @@ const BurgerIngredients = () => {
     );
   };
 
-  const IngredientCard = ({ data }) => {
+  const IngredientCard: FC<IIngredientCard> = ({ data }) => {
     const [{ isDrag }, dragRef] = useDrag({
       type: "ingredient",
       item: { _uuid: uuidv4(), ...data },
@@ -105,7 +124,6 @@ const BurgerIngredients = () => {
     return (
       <li
         className="mt-6"
-        onClick={() => handleClick(data)}
         ref={dragRef}
         style={{ opacity }}
       >
@@ -125,7 +143,7 @@ const BurgerIngredients = () => {
             className={`${styles.price} text text_type_digits-default mt-1 mb-1`}
           >
             {data.price}&nbsp;
-            <CurrencyIcon />
+            <CurrencyIcon type={"secondary"} />
           </div>
           <div className="text text_type_main-default">{data.name}</div>
         </Link>

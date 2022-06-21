@@ -9,7 +9,7 @@ import {
   CLEAR_CONSTRUCTOR_DATA,
 } from "../actions/ingredients";
 
-const initialState = {
+const initialState: any = {
   isLoading: false,
   hasError: false,
   ingredientData: [],
@@ -20,7 +20,7 @@ const initialState = {
   currentViewedIngredient: {},
 };
 
-export const ingredientsReducer = (state = initialState, action) => {
+export const ingredientsReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case GET_INGREDIENTS_REQUEST: {
       return {
