@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, useRouteMatch } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector } from "../../services/hooks";
 import styles from "./app-header.module.css";
 import {
   Logo,
@@ -10,7 +10,7 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
 const AppHeader = () => {
-  const { userData } = useSelector((store: any) => store.user);
+  const { userData } = useSelector((store) => store.user);
   const [userName, setUserName] = useState<string>("Личный кабинет");
   useEffect(() => {
     const isUserNameExist: boolean = userData.name !== "";

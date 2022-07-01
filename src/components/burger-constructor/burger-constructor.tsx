@@ -8,12 +8,12 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import ConstructorIngredient from "../constructor-ingredient/constructor-ingredient";
 import OrderDetails from "../order-details/order-details";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "../../services/hooks";
 import { useDrop } from "react-dnd";
-import { ADD_INGREDIENT } from "../../services/actions/ingredients";
-import { OPEN_MODAL } from "../../services/actions/modal";
+import { ADD_INGREDIENT } from "../../services/constants/ingredients";
+import { OPEN_MODAL } from "../../services/constants/modal";
 import { createOrderEnhancer } from "../../services/actions/order";
-import { IIngredientExtended } from "../../utils/types";
+import { IIngredientExtended } from "../../services/types";
 declare module 'react' {
   interface FunctionComponent<P = {}> {
     (props: PropsWithChildren<P>, context?: any): ReactElement<any, any> | null;
@@ -33,18 +33,18 @@ const BurgerConstructor = () => {
       isHover: monitor.isOver(),
     }),
   });
-  const { isAuthenthicated } = useSelector((store: any) => store.user);
-  const { constructorData } = useSelector((store: any) => store.ingredients);
+  const { isAuthenthicated } = useSelector((store) => store.user);
+  const { constructorData } = useSelector((store) => store.ingredients);
   const { order, orderError, orderIsLoading } = useSelector(
-    (store: any) => store.order
+    (store) => store.order
   );
-  const bun: IIngredientExtended = constructorData.bun;
+  const bun = constructorData.bun;
   const ingredients: IIngredientExtended[] = constructorData.ingredients;
   const history = useHistory();
   const handleClick = async () => {
     if (isAuthenthicated) {
       const ingredientIds: string[] = [
-        bun._id,
+        bun!._id,
         ...ingredients.map((ingredient) => ingredient._id),
       ];
       dispatch(createOrderEnhancer(ingredientIds) as any);
@@ -54,12 +54,15 @@ const BurgerConstructor = () => {
   };
 
   useEffect(() => {
-    if (order?.order?.number > 0) {
-      dispatch({
-        type: OPEN_MODAL,
-        modalContent: <OrderDetails orderNumber={order.order.number} />,
-      });
+    if(order){
+      if (order!.order?.number > 0) {
+        dispatch({
+          type: OPEN_MODAL,
+          modalContent: <OrderDetails orderNumber={order!.order.number} />,
+        });
+      }
     }
+    
   }, [order, dispatch]);
 
   useEffect(() => {

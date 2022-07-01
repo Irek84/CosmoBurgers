@@ -24,9 +24,46 @@ import {
   UPDATE_USER_REQUEST,
   UPDATE_USER_SUCCESS,
   UPDATE_USER_FAILED,
-} from "../actions/user";
+} from "../constants/user";
+import { TUserActions } from "../actions/user";
 
-const initialState = {
+export type TUserState = {
+  userData: {
+    name: string,
+    email: string,
+  },
+
+  resetPasswordEmail: string,
+  resetPasswordRequest: boolean,
+  resetPasswordFailed: boolean,
+  resetPasswordMessage: string,
+
+  setNewPasswordRequest: boolean,
+  setNewPasswordFailed: boolean,
+  setNewPasswordMessage: string,
+
+  registerUserRequest: boolean,
+  registerUserFailed: boolean,
+
+  loginUserRequest: boolean,
+  loginUserFailed: boolean,
+  isAuthenthicated: boolean,
+
+  logoutUserRequest: boolean,
+  logoutUserFailed: boolean,
+  logoutUserMessage: string | null,
+
+  refreshTokenRequest: boolean,
+  refreshTokenFailed: boolean,
+
+  getUserRequest: boolean,
+  getUserFailed: boolean,
+
+  updateUserRequest: boolean,
+  updateUserFailed: boolean,
+};
+
+const initialState: TUserState = {
   userData: {
     name: "",
     email: "",
@@ -35,11 +72,11 @@ const initialState = {
   resetPasswordEmail: "",
   resetPasswordRequest: false,
   resetPasswordFailed: false,
-  resetPasswordMessage: null,
+  resetPasswordMessage: "",
 
   setNewPasswordRequest: false,
   setNewPasswordFailed: false,
-  setNewPasswordMessage: null,
+  setNewPasswordMessage: "",
 
   registerUserRequest: false,
   registerUserFailed: false,
@@ -62,7 +99,7 @@ const initialState = {
   updateUserFailed: false,
 };
 
-export const userReducer = (state = initialState, action: any) => {
+export const userReducer = (state = initialState, action: TUserActions): TUserState => {
   switch (action.type) {
     case RESET_PASSWORD_REQUEST: {
       return {
@@ -76,7 +113,7 @@ export const userReducer = (state = initialState, action: any) => {
         resetPasswordRequest: false,
         resetPasswordFailed: false,
         resetPasswordMessage: action.response,
-        setNewPasswordMessage: null,
+        setNewPasswordMessage: "",
         resetPasswordEmail: "",
       };
     }
@@ -106,7 +143,7 @@ export const userReducer = (state = initialState, action: any) => {
         setNewPasswordRequest: false,
         setNewPasswordFailed: false,
         setNewPasswordMessage: action.response,
-        resetPasswordMessage: null,
+        resetPasswordMessage: "",
       };
     }
     case SET_NEW_PASSWORD_FAILED: {

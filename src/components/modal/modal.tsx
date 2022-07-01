@@ -6,7 +6,7 @@ import styles from "./modal.module.css";
 
 const modalRoot = document.getElementById("react-modals") as HTMLFormElement;
 type TModalProps = {
-  title?: string;
+  title?: string | null;
   onClose: (e: React.MouseEvent<HTMLElement>|KeyboardEvent) => void;
   children: ReactNode;
 }

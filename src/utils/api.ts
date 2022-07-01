@@ -1,4 +1,4 @@
-import { TTokenBody, TCheckSuccess, TCreateOrder, TIngredientsData } from "./types";
+import { TTokenBody, TCheckSuccess, TOrder, TIngredientsData } from "../services/types";
 
 export const ROOT_API_URL = "https://norma.nomoreparties.space/api";
 const headers = {
@@ -7,27 +7,19 @@ const headers = {
 };
 export const expiresAT = new Date(Date.now() + 20 * 60 * 1000).toUTCString();
 export const expiresRT = new Date(Date.now() + 20 * 60 * 100000).toUTCString();
-export const setCookie = (name: string, value: string, expires: string) =>
-  (document.cookie = `${name}=${value};Expires=${expires}`);
+export const setCookie = (name: string, value: string, expires: string) => (document.cookie = `${name}=${value};Expires=${expires}`);
 export const getCookie = (name: string) => {
-  const matches = document.cookie.match(
-    new RegExp(
-      "(?:^|; )" +
-        name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
-        "=([^;]*)"
-    )
-  );
+  const matches = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") + "=([^;]*)"));
   return matches ? decodeURIComponent(matches[1]) : undefined;
 };
 
-export const deleteCookie = (name: string) =>
-  (document.cookie = `${name}=;Expires=${new Date(0).toUTCString()}`);
+export const deleteCookie = (name: string) => (document.cookie = `${name}=;Expires=${new Date(0).toUTCString()}`);
 
 const checkResponse = (res: Response) => {
   return res.ok ? res.json() : res.json().then((err: string) => Promise.reject(err));
 };
 
-const checkSuccess = <T>(data: TCheckSuccess<T>)  => {
+const checkSuccess = <T>(data: TCheckSuccess<T>) => {
   if (data?.success) return data;
   else return Promise.reject(data);
 };
@@ -38,7 +30,7 @@ export const getIngredients = async () => {
   return (await checkSuccess<TIngredientsData>(data)).data;
 };
 
-export const createOrder = async (ingredientIds: string) => {
+export const createOrder = async (ingredientIds: Array<string>) => {
   const res = await fetch(ROOT_API_URL + "/orders", {
     method: "POST",
     headers: headers,
@@ -47,7 +39,7 @@ export const createOrder = async (ingredientIds: string) => {
     }),
   });
   const data = await checkResponse(res);
-  return await checkSuccess<TCreateOrder>(data);
+  return await checkSuccess<TOrder>(data);
 };
 
 export const passwordReset = async (email: string) => {
@@ -75,11 +67,7 @@ export const setNewPassword = async (newPassword: string, token: string) => {
   return await checkSuccess(data);
 };
 
-export const registerUser = async (
-  email: string,
-  password: string,
-  name: string
-) => {
+export const registerUser = async (email: string, password: string, name: string) => {
   const res = await fetch(ROOT_API_URL + "/auth/register", {
     method: "POST",
     headers: headers,
@@ -118,9 +106,9 @@ export const logoutUser = async (tokenBody: TTokenBody) => {
 
 export const getUser = () => {
   const requestHeaders: HeadersInit = new Headers();
-  requestHeaders.set('Content-Type', 'application/json');
-  requestHeaders.set('Accept', 'application/json');
-  requestHeaders.set('Authorization', getCookie("accessToken")??"");
+  requestHeaders.set("Content-Type", "application/json");
+  requestHeaders.set("Accept", "application/json");
+  requestHeaders.set("Authorization", getCookie("accessToken") ?? "");
   return fetchWithRefreshToken(ROOT_API_URL + "/auth/user", {
     method: "GET",
     headers: requestHeaders,
@@ -129,15 +117,11 @@ export const getUser = () => {
   });
 };
 
-export const updateUser = (data: {
-  name: string;
-  email: string;
-  password: string;
-}) => {
+export const updateUser = (data: { name: string; email: string; password: string }) => {
   const requestHeaders: HeadersInit = new Headers();
-  requestHeaders.set('Content-Type', 'application/json');
-  requestHeaders.set('Accept', 'application/json');
-  requestHeaders.set('Authorization', getCookie("accessToken")??"");
+  requestHeaders.set("Content-Type", "application/json");
+  requestHeaders.set("Accept", "application/json");
+  requestHeaders.set("Authorization", getCookie("accessToken") ?? "");
   return fetchWithRefreshToken(ROOT_API_URL + "/auth/user", {
     method: "PATCH",
     headers: requestHeaders,

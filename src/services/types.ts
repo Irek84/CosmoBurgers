@@ -1,4 +1,21 @@
 import { MutableRefObject } from "react";
+import { ThunkAction, ThunkDispatch } from "redux-thunk";
+import { Action, ActionCreator, AnyAction } from "redux";
+import { store } from "./store";
+import { TIngredientsActions } from "./actions/ingredients";
+import { TOrderActions } from "./actions/order";
+import { TModalActions } from "./actions/modal";
+import { TUserActions } from "./actions/user";
+
+type TApplicationActions = TIngredientsActions | TOrderActions | TModalActions | TUserActions;
+
+export type RootState = ReturnType<typeof store.getState>;
+
+export type AppDispatch = typeof store.dispatch;
+export type AppThunk<ReturnType = void> = ActionCreator<ThunkAction<ReturnType, Action, RootState, TApplicationActions>>;
+
+//export type AppDispatch = typeof store.dispatch & ThunkDispatch<RootState, null, AnyAction>
+//export type AppThunk = ThunkAction<void, RootState, null, TApplicationActions>
 
 export interface IIngredient {
   _id: string;
@@ -18,10 +35,7 @@ export interface IIngredientExtended extends IIngredient {
   _uuid: string;
   index: number;
 }
-export type TCurrentViewedIngredient = Pick<
-  IIngredient,
-  "name" | "image_large" | "calories" | "proteins" | "fat" | "carbohydrates"
-> & { isLoading: boolean };
+export type TCurrentViewedIngredient = Pick<IIngredient, "name" | "image_large" | "calories" | "proteins" | "fat" | "carbohydrates"> & { isLoading: boolean };
 
 export interface ICurrentViewedIngredient {
   image_large: string;
@@ -68,7 +82,7 @@ export type TTarget = { target: { name: string; value: string } };
 export type TNewPassword = { newPassword: string; token: string };
 export type TTokenBody = { token: string | undefined };
 
-export type TCreateOrder = {
+export type TOrder = {
   name: string;
   order: {
     ingredients: Array<IIngredient>;
@@ -95,4 +109,4 @@ export type TCheckSuccess<T> = T & {
 
 export type TIngredientsData = {
   data: Array<IIngredient>;
-}
+};

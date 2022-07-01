@@ -1,5 +1,5 @@
 import React, { SyntheticEvent, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "../services/hooks";
 import { Link } from "react-router-dom";
 import {
   Input,
@@ -7,13 +7,13 @@ import {
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { loginUserEnhancer } from "../services/actions/user";
-import { TTarget } from "../utils/types";
+import { TTarget } from "../services/types";
 import styles from "./page.module.css";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
 
-  const { loginUserFailed } = useSelector((store: any) => store.user);
+  const { loginUserFailed } = useSelector((store) => store.user);
   const [values, setValues] = useState<{ email: string; password: string }>({
     email: "",
     password: "",
@@ -26,7 +26,7 @@ const LoginPage = () => {
   };
   const handleOnSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    dispatch(loginUserEnhancer(values.email, values.password) as any);
+    dispatch(loginUserEnhancer(values.email, values.password));
   };
 
   return (

@@ -1,26 +1,20 @@
 import React, { SyntheticEvent, useCallback } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "../services/hooks";
 import { Link } from "react-router-dom";
-import {
-  Input,
-  Button,
-} from "@ya.praktikum/react-developer-burger-ui-components";
-import {
-  resetPasswordEnhancer,
-  RESET_PASSWORD_SET_EMAIL,
-} from "../services/actions/user";
+import { Input, Button } from "@ya.praktikum/react-developer-burger-ui-components";
+import { resetPasswordEnhancer } from "../services/actions/user";
+import { RESET_PASSWORD_SET_EMAIL } from "../services/constants/user";
 
 import styles from "./page.module.css";
 
 const ForgotPasswordPage = () => {
   const dispatch = useDispatch();
-  const { resetPasswordEmail } = useSelector((store: any) => store.user);
+  const { resetPasswordEmail } = useSelector((store) => store.user);
 
   const resetPassword = useCallback(
     (e: SyntheticEvent) => {
       e.preventDefault();
-      if (resetPasswordEmail.length)
-        dispatch(resetPasswordEnhancer(resetPasswordEmail) as any);
+      if (resetPasswordEmail.length) dispatch(resetPasswordEnhancer(resetPasswordEmail));
     },
     [dispatch, resetPasswordEmail]
   );
@@ -40,14 +34,7 @@ const ForgotPasswordPage = () => {
       <section className={styles.container}>
         <h1 className="text_type_main-medium mb-6">Восстановление пароля</h1>
         <div className="mb-6">
-          <Input
-            type={"email"}
-            placeholder={"Укажите e-mail"}
-            name={"E-mail"}
-            size={"default"}
-            value={resetPasswordEmail || ""}
-            onChange={setEmail}
-          />
+          <Input type={"email"} placeholder={"Укажите e-mail"} name={"E-mail"} size={"default"} value={resetPasswordEmail || ""} onChange={setEmail} />
         </div>
 
         <Button type="primary" size="medium">

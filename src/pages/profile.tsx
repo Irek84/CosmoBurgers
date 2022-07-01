@@ -1,4 +1,4 @@
-import { useDispatch } from "react-redux";
+import { useDispatch } from "../services/hooks";
 import {
   NavLink,
   Switch,
@@ -19,7 +19,7 @@ const ProfilePage = () => {
   const pathname: string = useLocation().pathname;
 
   const onLogout = () => {
-    dispatch(logoutUserEnhancer() as any);
+    dispatch(logoutUserEnhancer());
   };
 
   return (

@@ -1,5 +1,5 @@
 import React, { FC, MutableRefObject, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch } from "../../services/hooks";
 import { DropTargetMonitor, useDrag, useDrop } from "react-dnd";
 import {
   DragIcon,
@@ -8,9 +8,9 @@ import {
 import {
   DELETE_INGREDIENT,
   REARRANGE_INGREDIENTS,
-} from "../../services/actions/ingredients";
+} from "../../services/constants/ingredients";
 
-import { IIngredientExtended } from "../../utils/types";
+import { IIngredientExtended } from "../../services/types";
 
 import styles from "./constructor-ingredient.module.css";
 

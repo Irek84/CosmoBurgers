@@ -1,31 +1,17 @@
 import React, { useEffect } from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  useHistory,
-  useLocation,
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, useHistory, useLocation } from "react-router-dom";
 import ProtectedRoute from "../protected-route/protected-route";
 
 import AppHeader from "../app-header/app-header";
 import IngredientDetails from "../ingredient-details/ingredient-details";
 
 import Modal from "../modal/modal";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  MainPage,
-  LoginPage,
-  ProfilePage,
-  RegisterPage,
-  ForgotPasswordPage,
-  ResetPasswordPage,
-  NotFound404,
-} from "../../pages";
+import { useSelector, useDispatch } from "../../services/hooks";
+import { MainPage, LoginPage, ProfilePage, RegisterPage, ForgotPasswordPage, ResetPasswordPage, NotFound404 } from "../../pages";
 
-import { CLOSE_MODAL } from "../../services/actions/modal";
-import { CURRENT_VIEWED_INGREDIENT } from "../../services/actions/ingredients";
-import { DELETE_ORDER } from "../../services/actions/order";
+import { CLOSE_MODAL } from "../../services/constants/modal";
+import { CURRENT_VIEWED_INGREDIENT } from "../../services/constants/ingredients";
+import { DELETE_ORDER } from "../../services/constants/order";
 import { checkUserAuth } from "../../services/actions/user";
 import { Location } from "history";
 import styles from "./app.module.css";
@@ -36,9 +22,7 @@ function App() {
     const location = useLocation<{ background: Location }>();
     const history = useHistory();
     let background = location.state && location.state.background;
-    const { currentViewedIngredient } = useSelector(
-      (store: any) => store.ingredients
-    );
+    const { currentViewedIngredient } = useSelector((store) => store.ingredients);
     const closeModal = () => {
       dispatch({
         type: CLOSE_MODAL,
@@ -54,16 +38,10 @@ function App() {
       history.replace({ pathname: "/" });
     };
 
-    const {
-      isAuthenthicated,
-      resetPasswordFailed,
-      resetPasswordMessage,
-      setNewPasswordFailed,
-      setNewPasswordMessage,
-    } = useSelector((store: any) => store.user);
+    const { isAuthenthicated, resetPasswordFailed, resetPasswordMessage, setNewPasswordFailed, setNewPasswordMessage } = useSelector((store) => store.user);
 
     useEffect(() => {
-      dispatch(checkUserAuth() as any);
+      dispatch(checkUserAuth());
     }, [dispatch]);
 
     return (
@@ -77,27 +55,15 @@ function App() {
           <Route path="/ingredients/:id" exact={true}>
             <IngredientDetails title="Детали ингредиента" />
           </Route>
-          <ProtectedRoute
-            path="/login"
-            redirectСondition={isAuthenthicated}
-            redirectPath="/"
-          >
+          <ProtectedRoute path="/login" redirectСondition={isAuthenthicated} redirectPath="/">
             <LoginPage />
           </ProtectedRoute>
-          <ProtectedRoute
-            path="/register"
-            redirectСondition={isAuthenthicated}
-            redirectPath="/"
-          >
+          <ProtectedRoute path="/register" redirectСondition={isAuthenthicated} redirectPath="/">
             <RegisterPage />
           </ProtectedRoute>
           <ProtectedRoute
             path="/forgot-password"
-            redirectСondition={
-              isAuthenthicated
-                ? true
-                : !resetPasswordFailed && resetPasswordMessage
-            }
+            redirectСondition={isAuthenthicated ? true : !resetPasswordFailed && (resetPasswordMessage.length > 0 ? true : false)}
             redirectPath={isAuthenthicated ? "/" : "/reset-password"}
           >
             <ForgotPasswordPage />
@@ -106,18 +72,14 @@ function App() {
             path="/reset-password"
             redirectСondition={
               isAuthenthicated ||
-              (!setNewPasswordFailed && setNewPasswordMessage) ||
-              !resetPasswordMessage
+              (!setNewPasswordFailed && (setNewPasswordMessage.length > 0 ? true : false)) ||
+              !(resetPasswordMessage!.length > 0 ? true : false)
             }
             redirectPath={isAuthenthicated ? "/" : "/login"}
           >
             <ResetPasswordPage />
           </ProtectedRoute>
-          <ProtectedRoute
-            path="/profile"
-            redirectСondition={!isAuthenthicated}
-            redirectPath="/login"
-          >
+          <ProtectedRoute path="/profile" redirectСondition={!isAuthenthicated} redirectPath="/login">
             <ProfilePage />
           </ProtectedRoute>
           <Route>
