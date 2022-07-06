@@ -14,6 +14,14 @@ export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 export type AppThunk<ReturnType = void> = ActionCreator<ThunkAction<ReturnType, Action, RootState, TApplicationActions>>;
 
+export type TAppDispatch = ThunkDispatch<RootState, never, TApplicationActions>;
+export type TAppThunk<ReturnType = void> = ThunkAction<
+  ReturnType,
+  RootState,
+  never,
+  TApplicationActions
+  >;
+
 //export type AppDispatch = typeof store.dispatch & ThunkDispatch<RootState, null, AnyAction>
 //export type AppThunk = ThunkAction<void, RootState, null, TApplicationActions>
 
@@ -110,3 +118,29 @@ export type TCheckSuccess<T> = T & {
 export type TIngredientsData = {
   data: Array<IIngredient>;
 };
+
+export type TWsAction = {
+  wsInit: string;
+  wsClose: string;
+  onOpen: string;
+  onClose: string;
+  onError: string;
+  onMessage: string;
+};
+
+export type TWsOrder = {
+    ingredients: Array<string>;
+    _id: string;
+    status: string;
+    name: string;
+    createdAt: Date;
+    updatedAt: Date;
+    number: number;
+};
+
+export type TWsOrders = {
+  success: boolean;
+	orders: Array<TWsOrder>;
+	total: number;
+	totalToday: number;
+}

@@ -1,6 +1,7 @@
 import { TTokenBody, TCheckSuccess, TOrder, TIngredientsData } from "../services/types";
 
 export const ROOT_API_URL = "https://norma.nomoreparties.space/api";
+export const WS_URL = 'wss://norma.nomoreparties.space/orders/all';
 const headers = {
   Accept: "application/json",
   "Content-Type": "application/json",
@@ -31,9 +32,13 @@ export const getIngredients = async () => {
 };
 
 export const createOrder = async (ingredientIds: Array<string>) => {
+  const requestHeaders: HeadersInit = new Headers();
+  requestHeaders.set("Content-Type", "application/json");
+  requestHeaders.set("Accept", "application/json");
+  requestHeaders.set("Authorization", getCookie("accessToken") ?? "");
   const res = await fetch(ROOT_API_URL + "/orders", {
     method: "POST",
-    headers: headers,
+    headers: requestHeaders,
     body: JSON.stringify({
       ingredients: ingredientIds,
     }),
@@ -164,4 +169,13 @@ const fetchWithRefreshToken = (url: string, options: RequestInit) => {
         }
       });
     });
+};
+
+export const getOrder = async (number: string) => {
+  const res = await  fetch(`${ROOT_API_URL}/orders/${number}`, {
+    method: 'GET',
+    headers: headers,
+  });
+  const data = await checkResponse(res);
+  return await checkSuccess(data).orders[0];
 };

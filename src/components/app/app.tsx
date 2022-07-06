@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { BrowserRouter as Router, Switch, Route, useHistory, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, useHistory, useLocation, useRouteMatch } from "react-router-dom";
 import ProtectedRoute from "../protected-route/protected-route";
 
 import AppHeader from "../app-header/app-header";
@@ -7,7 +7,7 @@ import IngredientDetails from "../ingredient-details/ingredient-details";
 
 import Modal from "../modal/modal";
 import { useSelector, useDispatch } from "../../services/hooks";
-import { MainPage, LoginPage, ProfilePage, RegisterPage, ForgotPasswordPage, ResetPasswordPage, NotFound404 } from "../../pages";
+import { MainPage, LoginPage, ProfilePage, RegisterPage, ForgotPasswordPage, ResetPasswordPage, NotFound404, FeedPage, OrderInfoPage } from "../../pages";
 
 import { CLOSE_MODAL } from "../../services/constants/modal";
 import { CURRENT_VIEWED_INGREDIENT } from "../../services/constants/ingredients";
@@ -22,7 +22,7 @@ function App() {
     const location = useLocation<{ background: Location }>();
     const history = useHistory();
     let background = location.state && location.state.background;
-    const { currentViewedIngredient } = useSelector((store) => store.ingredients);
+    const { currentViewedIngredient } = useSelector((store: { ingredients: any }) => store.ingredients);
     const closeModal = () => {
       dispatch({
         type: CLOSE_MODAL,
@@ -35,7 +35,8 @@ function App() {
           type: CURRENT_VIEWED_INGREDIENT,
           item: null,
         });
-      history.replace({ pathname: "/" });
+
+      history.goBack();
     };
 
     const { isAuthenthicated, resetPasswordFailed, resetPasswordMessage, setNewPasswordFailed, setNewPasswordMessage } = useSelector((store) => store.user);
@@ -54,6 +55,12 @@ function App() {
           </Route>
           <Route path="/ingredients/:id" exact={true}>
             <IngredientDetails title="Детали ингредиента" />
+          </Route>
+          <Route path="/feed" exact={true}>
+            <FeedPage />
+          </Route>
+          <Route path="/feed/:id">
+            <OrderInfoPage />
           </Route>
           <ProtectedRoute path="/login" redirectСondition={isAuthenthicated} redirectPath="/">
             <LoginPage />
@@ -88,14 +95,25 @@ function App() {
         </Switch>
 
         {background && (
-          <Route
-            path="/ingredients/:id"
-            children={
-              <Modal onClose={closeModal} title="Детали ингредиента">
-                <IngredientDetails />
-              </Modal>
-            }
-          ></Route>
+          <>
+            {" "}
+            <Route
+              path="/ingredients/:id"
+              children={
+                <Modal onClose={closeModal} title="Детали ингредиента">
+                  <IngredientDetails />
+                </Modal>
+              }
+            ></Route>
+            <Route
+              path="/feed/:id"
+              children={
+                <Modal onClose={closeModal}>
+                  <OrderInfoPage />
+                </Modal>
+              }
+            />
+          </>
         )}
       </div>
     );

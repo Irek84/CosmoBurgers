@@ -1,0 +1,45 @@
+.main{
+  display: flex;
+  flex-direction: column;
+}
+
+.component {
+  display: flex;
+  align-self: center;
+  justify-content: center;
+  flex-grow: 1;
+  flex-direction: column;
+  width: 640px;
+  margin:20px;
+}
+
+.component h2{
+  text-align: center;
+}
+
+.component ul {
+  list-style-type: none;
+  padding-left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 320px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.component li {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ingredient {
+  display: flex;
+  flex-grow: 1;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+}

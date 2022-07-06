@@ -17,7 +17,7 @@ const AppHeader = () => {
     setUserName(isUserNameExist ? userData.name : "Личный кабинет");
   }, [userData]);
   const isConstructor: boolean = !!useRouteMatch({ path: "/", exact: true });
-  const isFeed: boolean = !!useRouteMatch("/order-feed");
+  const isFeed: boolean = !!useRouteMatch("/feed");
   const isProfile: boolean = !!useRouteMatch("/profile");
   return (
     <header>
@@ -36,7 +36,7 @@ const AppHeader = () => {
           </NavLink>
           <NavLink
             className="pr-5 pl-5 mt-4 mb-4"
-            to="/order-feed"
+            to="/feed"
             activeClassName={styles.active}
           >
             <ListIcon type={isFeed ? "primary" : "secondary"} />

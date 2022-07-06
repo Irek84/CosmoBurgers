@@ -1,0 +1,10 @@
+main {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+main > div:first-child {
+  display: flex;
+  width: 1333px;
+}

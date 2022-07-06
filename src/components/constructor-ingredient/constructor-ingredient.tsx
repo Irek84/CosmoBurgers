@@ -1,14 +1,8 @@
 import React, { FC, MutableRefObject, useRef } from "react";
 import { useDispatch } from "../../services/hooks";
 import { DropTargetMonitor, useDrag, useDrop } from "react-dnd";
-import {
-  DragIcon,
-  ConstructorElement,
-} from "@ya.praktikum/react-developer-burger-ui-components";
-import {
-  DELETE_INGREDIENT,
-  REARRANGE_INGREDIENTS,
-} from "../../services/constants/ingredients";
+import { DragIcon, ConstructorElement } from "@ya.praktikum/react-developer-burger-ui-components";
+import { DELETE_INGREDIENT, REARRANGE_INGREDIENTS } from "../../services/constants/ingredients";
 
 import { IIngredientExtended } from "../../services/types";
 
@@ -47,8 +41,7 @@ const ConstructorIngredient: FC<TConstructorIngredient> = (props) => {
       if (dragIndex === hoverIndex) return;
 
       const hoverBoundingRect = ref.current?.getBoundingClientRect();
-      const hoverMiddleY =
-        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
       const clientOffset = monitor.getClientOffset();
       if (clientOffset) {
         const hoverClientY = clientOffset.y - hoverBoundingRect.top;
@@ -80,12 +73,7 @@ const ConstructorIngredient: FC<TConstructorIngredient> = (props) => {
   drag(drop(ref));
 
   return (
-    <li
-      ref={ref}
-      className={`${styles.item} mb-4`}
-      style={{ opacity }}
-      data-handler-id={handlerId}
-    >
+    <li ref={ref} className={`${styles.item} mb-4`} style={{ opacity }} data-handler-id={handlerId}>
       <DragIcon type="primary" />
       <i className="ml-2" />
       <ConstructorElement
