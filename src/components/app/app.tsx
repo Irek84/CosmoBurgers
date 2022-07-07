@@ -14,6 +14,7 @@ import { DELETE_ORDER } from "../../services/constants/order";
 import { checkUserAuth } from "../../services/actions/user";
 import { Location } from "history";
 import styles from "./app.module.css";
+import { getIngredientsEnhancer } from "../../services/actions/ingredients";
 
 function App() {
   const ModalSwitch = () => {
@@ -47,6 +48,10 @@ function App() {
 
     useEffect(() => {
       dispatch(checkUserAuth());
+    }, [dispatch]);
+
+    useEffect(() => {
+      dispatch(getIngredientsEnhancer());
     }, [dispatch]);
 
     return (

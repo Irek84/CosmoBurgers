@@ -3,7 +3,6 @@ import OrdersFeed from "../components/orders-feed/orders-feed";
 import OrdersBoard from "../components/orders-board/orders-board";
 import { useDispatch } from "../services/hooks";
 import { WS_CONNECTION_START, WS_CONNECTION_CLOSE } from "../services/constants/ws-actions";
-import { getIngredientsEnhancer } from "../services/actions/ingredients";
 import styles from "./feed.module.css";
 
 function Feed() {
@@ -13,10 +12,6 @@ function Feed() {
     return () => {
       dispatch({ type: WS_CONNECTION_CLOSE });
     };
-  }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(getIngredientsEnhancer());
   }, [dispatch]);
 
   return (

@@ -1,6 +1,5 @@
 import React, { memo, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getIngredientsEnhancer } from "../services/actions/ingredients";
 import { useDispatch, useSelector } from "../services/hooks";
 import { IIngredient, TWsOrder } from "../services/types";
 import { getOrder } from "../utils/api";
@@ -45,10 +44,6 @@ function OrderInfoPage() {
     updatedAt: new Date(0),
     number: 0,
   });
-
-  useEffect(() => {
-    dispatch(getIngredientsEnhancer());
-  }, [dispatch]);
 
   useEffect(() => {
     getOrder(id)

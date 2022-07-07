@@ -7,7 +7,6 @@ import BurgerIngredients from "../components/burger-ingredients/burger-ingredien
 import BurgerConstructor from "../components/burger-constructor/burger-constructor";
 import Modal from "../components/modal/modal";
 
-import { getIngredientsEnhancer } from "../services/actions/ingredients";
 import { CURRENT_VIEWED_INGREDIENT, CLEAR_CONSTRUCTOR_DATA } from "../services/constants/ingredients";
 
 import { CLOSE_MODAL } from "../services/constants/modal";
@@ -21,10 +20,6 @@ function MainPage() {
   const { order } = useSelector((store) => store);
 
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(getIngredientsEnhancer());
-  }, [dispatch]);
 
   const closeModal = () => {
     dispatch({
