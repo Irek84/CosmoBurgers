@@ -13,7 +13,7 @@ import {
   getCookie,
   deleteCookie,
 } from "../../utils/api";
-import { AppDispatch, AppThunk, TOrder, TTokenBody, TUser } from "../types";
+import { TAppDispatch, TAppThunk, TOrder, TTokenBody, TUser } from "../types";
 import {
   RESET_PASSWORD_REQUEST,
   RESET_PASSWORD_SUCCESS,
@@ -163,8 +163,8 @@ export type TUserActions =
   | IUpdateUserSuccessAction
   | IUpdateUserFailedAction;
 
-export const resetPasswordEnhancer: AppThunk = (email: string) => {
-  return function (dispatch: AppDispatch) {
+export const resetPasswordEnhancer: TAppThunk = (email: string) => {
+  return function (dispatch: TAppDispatch) {
     dispatch({
       type: RESET_PASSWORD_REQUEST,
     });
@@ -192,8 +192,8 @@ export const resetPasswordEnhancer: AppThunk = (email: string) => {
   };
 };
 
-export const setNewPasswordEnhancer: AppThunk = (newPassword: string, token: string) => {
-  return function (dispatch: AppDispatch) {
+export const setNewPasswordEnhancer: TAppThunk = (newPassword: string, token: string) => {
+  return function (dispatch: TAppDispatch) {
     dispatch({
       type: SET_NEW_PASSWORD_REQUEST,
     });
@@ -221,8 +221,8 @@ export const setNewPasswordEnhancer: AppThunk = (newPassword: string, token: str
   };
 };
 
-export const registerUserEnhancer: AppThunk = (email: string, password: string, name: string) => {
-  return function (dispatch: AppDispatch) {
+export const registerUserEnhancer: TAppThunk = (email: string, password: string, name: string) => {
+  return function (dispatch: TAppDispatch) {
     dispatch({
       type: REGISTER_USER_REQUEST,
     });
@@ -251,8 +251,8 @@ export const registerUserEnhancer: AppThunk = (email: string, password: string, 
   };
 };
 
-export const loginUserEnhancer: AppThunk = (email: string, password: string) => {
-  return function (dispatch: AppDispatch) {
+export const loginUserEnhancer: TAppThunk = (email: string, password: string) => {
+  return function (dispatch: TAppDispatch) {
     dispatch({
       type: LOGIN_USER_REQUEST,
     });
@@ -283,8 +283,8 @@ export const loginUserEnhancer: AppThunk = (email: string, password: string) => 
   };
 };
 
-export const logoutUserEnhancer: AppThunk = () => {
-  return function (dispatch: AppDispatch) {
+export const logoutUserEnhancer: TAppThunk = () => {
+  return function (dispatch: TAppDispatch) {
     const tokenBody: TTokenBody = { token: getCookie("refreshToken") };
     dispatch({
       type: LOGOUT_USER_REQUEST,
@@ -315,8 +315,8 @@ export const logoutUserEnhancer: AppThunk = () => {
   };
 };
 
-export const updateTokenEnhancer: AppThunk = () => {
-  return function (dispatch: AppDispatch) {
+export const updateTokenEnhancer: TAppThunk = () => {
+  return function (dispatch: TAppDispatch) {
     dispatch({
       type: REFRESH_TOKEN_REQUEST,
     });
@@ -345,8 +345,8 @@ export const updateTokenEnhancer: AppThunk = () => {
   };
 };
 
-export const getUserEnhancer: AppThunk = () => {
-  return function (dispatch: AppDispatch) {
+export const getUserEnhancer: TAppThunk = () => {
+  return function (dispatch: TAppDispatch) {
     dispatch({
       type: GET_USER_REQUEST,
     });
@@ -369,8 +369,8 @@ export const getUserEnhancer: AppThunk = () => {
   };
 };
 
-export const updateUserEnhancer: AppThunk = (name: string, email: string, password: string) => {
-  return function (dispatch: AppDispatch) {
+export const updateUserEnhancer: TAppThunk = (name: string, email: string, password: string) => {
+  return function (dispatch: TAppDispatch) {
     dispatch({
       type: UPDATE_USER_REQUEST,
     });
@@ -398,8 +398,8 @@ export const updateUserEnhancer: AppThunk = (name: string, email: string, passwo
   };
 };
 
-export const checkUserAuth: AppThunk = () => {
-  return function (dispatch: AppDispatch) {
+export const checkUserAuth: TAppThunk = () => {
+  return function (dispatch: TAppDispatch) {
     const isAccessTokenExist = document.cookie.indexOf("accessToken=") !== -1;
     const isRefreshTokenExist = document.cookie.indexOf("refreshToken=") !== -1;
     if (!isAccessTokenExist && isRefreshTokenExist) {

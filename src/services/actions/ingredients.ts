@@ -10,7 +10,7 @@ import {
   CURRENT_VIEWED_INGREDIENT,
   CLEAR_CONSTRUCTOR_DATA,
 } from "../constants/ingredients";
-import { AppDispatch, AppThunk } from '../types';
+import { TAppDispatch, TAppThunk } from "../types";
 
 export interface IGetIngredientsRequestAction {
   readonly type: typeof GET_INGREDIENTS_REQUEST;
@@ -53,8 +53,8 @@ export type TIngredientsActions =
   | ICurrentViewedIngredientAction
   | IClearConstructorDataAction;
 
-export const getIngredientsEnhancer: AppThunk = () => {
-  return function (dispatch: AppDispatch) {
+export const getIngredientsEnhancer: TAppThunk = () => {
+  return function (dispatch: TAppDispatch) {
     dispatch({
       type: GET_INGREDIENTS_REQUEST,
     });

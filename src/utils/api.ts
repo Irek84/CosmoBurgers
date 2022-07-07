@@ -2,6 +2,7 @@ import { TTokenBody, TCheckSuccess, TOrder, TIngredientsData } from "../services
 
 export const ROOT_API_URL = "https://norma.nomoreparties.space/api";
 export const WS_URL = 'wss://norma.nomoreparties.space/orders/all';
+export const WS_AUTH_URL = 'wss://norma.nomoreparties.space/orders';
 const headers = {
   Accept: "application/json",
   "Content-Type": "application/json",

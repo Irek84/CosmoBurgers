@@ -33,6 +33,9 @@ function MainPage() {
     dispatch({
       type: DELETE_ORDER,
     });
+    dispatch({
+      type: CLEAR_CONSTRUCTOR_DATA,
+    });
     currentViewedIngredient &&
       dispatch({
         type: CURRENT_VIEWED_INGREDIENT,

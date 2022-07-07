@@ -1,6 +1,6 @@
 import { createOrder } from "../../utils/api";
 import { CREATE_ORDER_REQUEST, CREATE_ORDER_SUCCESS, CREATE_ORDER_FAILED, DELETE_ORDER } from "../constants/order";
-import { AppDispatch, AppThunk, TOrder } from "../types";
+import { TAppDispatch, TAppThunk, TOrder } from "../types";
 
 export interface ICreateOrderRequestAction {
   readonly type: typeof CREATE_ORDER_REQUEST;
@@ -19,8 +19,8 @@ export interface IDeleteOrderAction {
 
 export type TOrderActions = ICreateOrderRequestAction | ICreateOrderSuccessAction | ICreateOrderFailedAction | IDeleteOrderAction;
 
-export const createOrderEnhancer: AppThunk = (ingredientIds: Array<string>) => {
-  return function (dispatch: AppDispatch) {
+export const createOrderEnhancer: TAppThunk = (ingredientIds: Array<string>) => {
+  return function (dispatch: TAppDispatch) {
     dispatch({
       type: CREATE_ORDER_REQUEST,
     });
@@ -34,7 +34,7 @@ export const createOrderEnhancer: AppThunk = (ingredientIds: Array<string>) => {
         } else {
           dispatch({
             type: CREATE_ORDER_FAILED,
-            error: "Ошибка создания заявки"
+            error: "Ошибка создания заявки",
           });
         }
       })

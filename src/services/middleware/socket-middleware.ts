@@ -9,7 +9,10 @@ export const socketMiddleware = (wsUrl: string, wsActions: TWsAction, isProtecte
     const { dispatch } = store;
     const { type, payload } = action;
     const { wsInit, wsClose, onOpen, onClose, onError, onMessage } = wsActions;
-    const token = isProtected ? getCookie("token") : null;
+    let token = isProtected ? getCookie("accessToken") : null;
+    if (token!?.length > 8) {
+      token = token?.substring(7, token.length);
+    }
     if (type === wsInit) {
       socket = token ? new WebSocket(`${wsUrl}?token=${token}`) : new WebSocket(`${wsUrl}`);
     }
@@ -32,7 +35,6 @@ export const socketMiddleware = (wsUrl: string, wsActions: TWsAction, isProtecte
 
       socket.onclose = (event) => {
         dispatch({ type: onClose, payload: event });
-        console.log("Код закрытия сокета: ", event.code);
         if (!connected) {
           setTimeout(() => {
             dispatch({ type: wsInit });

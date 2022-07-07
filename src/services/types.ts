@@ -1,29 +1,20 @@
-import { MutableRefObject } from "react";
-import { ThunkAction, ThunkDispatch } from "redux-thunk";
-import { Action, ActionCreator, AnyAction } from "redux";
+import {  MutableRefObject } from "react";
+import { ThunkAction } from "redux-thunk";
+import { Action, ActionCreator, Dispatch } from "redux";
 import { store } from "./store";
 import { TIngredientsActions } from "./actions/ingredients";
 import { TOrderActions } from "./actions/order";
 import { TModalActions } from "./actions/modal";
 import { TUserActions } from "./actions/user";
 
+import "redux-thunk/extend-redux";
+
 type TApplicationActions = TIngredientsActions | TOrderActions | TModalActions | TUserActions;
 
 export type RootState = ReturnType<typeof store.getState>;
 
-export type AppDispatch = typeof store.dispatch;
-export type AppThunk<ReturnType = void> = ActionCreator<ThunkAction<ReturnType, Action, RootState, TApplicationActions>>;
-
-export type TAppDispatch = ThunkDispatch<RootState, never, TApplicationActions>;
-export type TAppThunk<ReturnType = void> = ThunkAction<
-  ReturnType,
-  RootState,
-  never,
-  TApplicationActions
-  >;
-
-//export type AppDispatch = typeof store.dispatch & ThunkDispatch<RootState, null, AnyAction>
-//export type AppThunk = ThunkAction<void, RootState, null, TApplicationActions>
+export type TAppDispatch = Dispatch<TApplicationActions>;
+export type TAppThunk<TReturn = void> = ActionCreator<ThunkAction<TReturn, Action, RootState, TApplicationActions>>;
 
 export interface IIngredient {
   _id: string;
