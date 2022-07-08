@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, useRouteMatch } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector } from "../../services/hooks";
 import styles from "./app-header.module.css";
 import {
   Logo,
@@ -10,14 +10,14 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
 const AppHeader = () => {
-  const { userData } = useSelector((store: any) => store.user);
+  const { userData } = useSelector((store) => store.user);
   const [userName, setUserName] = useState<string>("Личный кабинет");
   useEffect(() => {
     const isUserNameExist: boolean = userData.name !== "";
     setUserName(isUserNameExist ? userData.name : "Личный кабинет");
   }, [userData]);
   const isConstructor: boolean = !!useRouteMatch({ path: "/", exact: true });
-  const isFeed: boolean = !!useRouteMatch("/order-feed");
+  const isFeed: boolean = !!useRouteMatch("/feed");
   const isProfile: boolean = !!useRouteMatch("/profile");
   return (
     <header>
@@ -36,7 +36,7 @@ const AppHeader = () => {
           </NavLink>
           <NavLink
             className="pr-5 pl-5 mt-4 mb-4"
-            to="/order-feed"
+            to="/feed"
             activeClassName={styles.active}
           >
             <ListIcon type={isFeed ? "primary" : "secondary"} />

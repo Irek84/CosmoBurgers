@@ -7,9 +7,22 @@ import {
   REARRANGE_INGREDIENTS,
   CURRENT_VIEWED_INGREDIENT,
   CLEAR_CONSTRUCTOR_DATA,
-} from "../actions/ingredients";
+} from "../constants/ingredients";
+import { TIngredientsActions } from "../actions/ingredients";
+import { IIngredient, IIngredientExtended } from "../types";
 
-const initialState: any = {
+export type TIngredientsState = {
+  isLoading: boolean;
+  hasError: boolean;
+  ingredientData: Array<IIngredient>;
+  constructorData: {
+    bun: null | IIngredientExtended;
+    ingredients: Array<IIngredientExtended>;
+  };
+  currentViewedIngredient: null | IIngredient; //Проверить использование
+};
+
+const initialState: TIngredientsState = {
   isLoading: false,
   hasError: false,
   ingredientData: [],
@@ -17,10 +30,10 @@ const initialState: any = {
     bun: null,
     ingredients: [],
   },
-  currentViewedIngredient: {},
+  currentViewedIngredient: null,
 };
 
-export const ingredientsReducer = (state = initialState, action: any) => {
+export const ingredientsReducer = (state = initialState, action: TIngredientsActions): TIngredientsState => {
   switch (action.type) {
     case GET_INGREDIENTS_REQUEST: {
       return {
@@ -40,8 +53,8 @@ export const ingredientsReducer = (state = initialState, action: any) => {
     case GET_INGREDIENTS_FAILED: {
       return {
         ingredientData: [],
-        constructorData: {},
-        currentViewedIngredient: {},
+        constructorData: { bun: null, ingredients: [] },
+        currentViewedIngredient: null,
         hasError: true,
         isLoading: false,
       };
@@ -70,19 +83,13 @@ export const ingredientsReducer = (state = initialState, action: any) => {
         ...state,
         constructorData: {
           ...state.constructorData,
-          ingredients: [...state.constructorData.ingredients].filter(
-            (ingredient) => ingredient._uuid !== action.id
-          ),
+          ingredients: [...state.constructorData.ingredients].filter((ingredient) => ingredient._uuid !== action.id),
         },
       };
     }
     case REARRANGE_INGREDIENTS: {
       const rearrangedIngredients = [...state.constructorData.ingredients];
-      rearrangedIngredients.splice(
-        action.toIndex,
-        0,
-        rearrangedIngredients.splice(action.fromIndex, 1)[0]
-      );
+      rearrangedIngredients.splice(action.toIndex, 0, rearrangedIngredients.splice(action.fromIndex, 1)[0]);
       return {
         ...state,
         constructorData: {

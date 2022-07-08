@@ -1,13 +1,9 @@
 import React, { SyntheticEvent, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch } from "../services/hooks";
 import { Link } from "react-router-dom";
-import {
-  Input,
-  Button,
-  PasswordInput,
-} from "@ya.praktikum/react-developer-burger-ui-components";
+import { Input, Button, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
 import { setNewPasswordEnhancer } from "../services/actions/user";
-import { TTarget, TNewPassword } from "../utils/types";
+import { TTarget, TNewPassword } from "../services/types";
 import styles from "./page.module.css";
 
 const ResetPasswordPage = () => {
@@ -23,7 +19,7 @@ const ResetPasswordPage = () => {
   };
   const handleOnSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    dispatch(setNewPasswordEnhancer(values.newPassword, values.token) as any);
+    dispatch(setNewPasswordEnhancer(values.newPassword, values.token));
   };
 
   return (
@@ -31,21 +27,10 @@ const ResetPasswordPage = () => {
       <section className={styles.container}>
         <h1 className="text_type_main-medium mb-6">Восстановление пароля</h1>
 
-        <PasswordInput
-          name={"newPassword"}
-          onChange={handleChange}
-          value={values.newPassword || ""}
-        />
+        <PasswordInput name={"newPassword"} onChange={handleChange} value={values.newPassword || ""} />
 
         <div className="mb-6 mt-6">
-          <Input
-            type={"text"}
-            placeholder={"Введите код из письма"}
-            name={"token"}
-            size={"default"}
-            onChange={handleChange}
-            value={values.token || ""}
-          />
+          <Input type={"text"} placeholder={"Введите код из письма"} name={"token"} size={"default"} onChange={handleChange} value={values.token || ""} />
         </div>
 
         <Button type="primary" size="medium">

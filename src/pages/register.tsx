@@ -1,5 +1,5 @@
 import React, { SyntheticEvent, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch } from "../services/hooks";
 import { Link } from "react-router-dom";
 import {
   Input,
@@ -7,7 +7,7 @@ import {
   PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { registerUserEnhancer } from "../services/actions/user";
-import { TUser, TTarget } from "../utils/types";
+import { TUser, TTarget } from "../services/types";
 
 import styles from "./page.module.css";
 
@@ -27,7 +27,7 @@ const RegisterPage = () => {
   const handleOnSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     dispatch(
-      registerUserEnhancer(values.email, values.password, values.name) as any
+      registerUserEnhancer(values.email, values.password, values.name)
     );
   };
 

@@ -8,7 +8,7 @@ import {
   IParamTypes,
   TCurrentViewedIngredient,
   IIngredient,
-} from "../../utils/types";
+} from "../../services/types";
 
 const NutritionFact: FC<INutritionFact> = (props) => {
   return (

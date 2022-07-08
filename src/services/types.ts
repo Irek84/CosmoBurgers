@@ -1,4 +1,20 @@
-import { MutableRefObject } from "react";
+import {  MutableRefObject } from "react";
+import { ThunkAction } from "redux-thunk";
+import { Action, ActionCreator, Dispatch } from "redux";
+import { store } from "./store";
+import { TIngredientsActions } from "./actions/ingredients";
+import { TOrderActions } from "./actions/order";
+import { TModalActions } from "./actions/modal";
+import { TUserActions } from "./actions/user";
+
+import "redux-thunk/extend-redux";
+
+type TApplicationActions = TIngredientsActions | TOrderActions | TModalActions | TUserActions;
+
+export type RootState = ReturnType<typeof store.getState>;
+
+export type TAppDispatch = Dispatch<TApplicationActions>;
+export type TAppThunk<TReturn = void> = ActionCreator<ThunkAction<TReturn, Action, RootState, TApplicationActions>>;
 
 export interface IIngredient {
   _id: string;
@@ -18,10 +34,7 @@ export interface IIngredientExtended extends IIngredient {
   _uuid: string;
   index: number;
 }
-export type TCurrentViewedIngredient = Pick<
-  IIngredient,
-  "name" | "image_large" | "calories" | "proteins" | "fat" | "carbohydrates"
-> & { isLoading: boolean };
+export type TCurrentViewedIngredient = Pick<IIngredient, "name" | "image_large" | "calories" | "proteins" | "fat" | "carbohydrates"> & { isLoading: boolean };
 
 export interface ICurrentViewedIngredient {
   image_large: string;
@@ -68,7 +81,7 @@ export type TTarget = { target: { name: string; value: string } };
 export type TNewPassword = { newPassword: string; token: string };
 export type TTokenBody = { token: string | undefined };
 
-export type TCreateOrder = {
+export type TOrder = {
   name: string;
   order: {
     ingredients: Array<IIngredient>;
@@ -95,4 +108,30 @@ export type TCheckSuccess<T> = T & {
 
 export type TIngredientsData = {
   data: Array<IIngredient>;
+};
+
+export type TWsAction = {
+  wsInit: string;
+  wsClose: string;
+  onOpen: string;
+  onClose: string;
+  onError: string;
+  onMessage: string;
+};
+
+export type TWsOrder = {
+    ingredients: Array<string>;
+    _id: string;
+    status: string;
+    name: string;
+    createdAt: Date;
+    updatedAt: Date;
+    number: number;
+};
+
+export type TWsOrders = {
+  success: boolean;
+	orders: Array<TWsOrder>;
+	total: number;
+	totalToday: number;
 }

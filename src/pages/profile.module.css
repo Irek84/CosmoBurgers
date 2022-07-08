@@ -3,13 +3,13 @@
   height: calc(100vh - 88px);
   display: flex;
 }
-.section > div {
+.menu {
   width: 350px;
 }
-.section ul {
+.menu ul {
   padding-left: 0;
 }
-.section li {
+.menu li {
   list-style-type: none;
   margin: calc(var(--offset-base-size) * 6) 0;
 }
