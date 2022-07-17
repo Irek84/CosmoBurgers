@@ -49,7 +49,7 @@ const BurgerConstructor = () => {
       if (order!.order?.number > 0) {
         dispatch({
           type: OPEN_MODAL,
-          modalContent: <OrderDetails orderNumber={order!.order.number} />,
+          modalContent: <OrderDetails orderNumber={order!.order?.number} />,
         });
       }
     }

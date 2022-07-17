@@ -7,7 +7,7 @@ export interface ICreateOrderRequestAction {
 }
 export interface ICreateOrderSuccessAction {
   readonly type: typeof CREATE_ORDER_SUCCESS;
-  readonly order: TOrder;
+  readonly order: TOrder|null;
 }
 export interface ICreateOrderFailedAction {
   readonly type: typeof CREATE_ORDER_FAILED;

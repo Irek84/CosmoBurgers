@@ -63,7 +63,7 @@ export type TUserState = {
   updateUserFailed: boolean,
 };
 
-const initialState: TUserState = {
+export const initialState: TUserState = {
   userData: {
     name: "",
     email: "",

@@ -1,21 +1,15 @@
-import {
-  CREATE_ORDER_REQUEST,
-  CREATE_ORDER_SUCCESS,
-  CREATE_ORDER_FAILED,
-  DELETE_ORDER,
-} from "../constants/order";
+import { CREATE_ORDER_REQUEST, CREATE_ORDER_SUCCESS, CREATE_ORDER_FAILED, DELETE_ORDER } from "../constants/order";
 import { TOrderActions } from "../actions/order";
 import { TOrder } from "../types";
 
 export type TOrderState = {
-  order: TOrder | null,
-  orderIsLoading: boolean,
-  orderSuccess: boolean,
-  orderError: string,
+  order: TOrder | null;
+  orderIsLoading: boolean;
+  orderSuccess: boolean;
+  orderError: string;
 };
 
-
-const initialState: TOrderState = {
+export const initialState: TOrderState = {
   order: null,
   orderIsLoading: false,
   orderSuccess: false,

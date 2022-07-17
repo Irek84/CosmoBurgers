@@ -7,7 +7,7 @@ export type TModalState = {
   modalContent: null | JSX.Element;
 };
 
-const initialState: TModalState = {
+export const initialState: TModalState = {
   isModalVisible: false,
   modalTitle: null,
   modalContent: null,
