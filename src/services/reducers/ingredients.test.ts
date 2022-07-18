@@ -12,6 +12,21 @@ import {
 import { TIngredientsActions } from "../actions/ingredients";
 
 describe("ingredient reducer", () => {
+  const ingredient = {
+    _id: "",
+    name: "",
+    type: "",
+    proteins: 0,
+    fat: 0,
+    carbohydrates: 0,
+    calories: 0,
+    price: 0,
+    image: "",
+    image_mobile: "",
+    image_large: "",
+    _uuid: "",
+    index: 0,
+  };
   it("should return the initial state", () => {
     expect(ingredientsReducer(undefined, {} as TIngredientsActions)).toEqual(initialState);
   });
@@ -48,21 +63,6 @@ describe("ingredient reducer", () => {
     expect(ingredientsReducer(undefined, { type: GET_INGREDIENTS_FAILED })).toEqual(state);
   });
   it("should handle ADD_INGREDIENT", () => {
-    const ingredient = {
-      _id: "",
-      name: "",
-      type: "",
-      proteins: 0,
-      fat: 0,
-      carbohydrates: 0,
-      calories: 0,
-      price: 0,
-      image: "",
-      image_mobile: "",
-      image_large: "",
-      _uuid: "",
-      index: 0,
-    };
     const state = {
       ...initialState,
       constructorData: {
@@ -73,21 +73,6 @@ describe("ingredient reducer", () => {
     expect(ingredientsReducer(undefined, { type: ADD_INGREDIENT, item: ingredient })).toEqual(state);
   });
   it("should handle DELETE_INGREDIENT", () => {
-    const ingredient = {
-      _id: "",
-      name: "",
-      type: "",
-      proteins: 0,
-      fat: 0,
-      carbohydrates: 0,
-      calories: 0,
-      price: 0,
-      image: "",
-      image_mobile: "",
-      image_large: "",
-      _uuid: "",
-      index: 0,
-    };
     const state = {
       ...initialState,
       constructorData: {
@@ -98,7 +83,6 @@ describe("ingredient reducer", () => {
     expect(ingredientsReducer(undefined, { type: DELETE_INGREDIENT, id: "" })).toEqual(state);
   });
   it("should handle REARRANGE_INGREDIENTS", () => {
-
     const state = {
       ...initialState,
       constructorData: {
@@ -110,26 +94,11 @@ describe("ingredient reducer", () => {
     expect(ingredientsReducer(undefined, { type: REARRANGE_INGREDIENTS, fromIndex: 0, toIndex: 1 })).toEqual(state);
   });
   it("should handle CURRENT_VIEWED_INGREDIENT", () => {
-    const currentIngredient = {
-      _id: "",
-      name: "",
-      type: "",
-      proteins: 0,
-      fat: 0,
-      carbohydrates: 0,
-      calories: 0,
-      price: 0,
-      image: "",
-      image_mobile: "",
-      image_large: "",
-      _uuid: "",
-      index: 0,
-    };
     const state = {
       ...initialState,
-      currentViewedIngredient: currentIngredient,
+      currentViewedIngredient: ingredient,
     };
-    expect(ingredientsReducer(undefined, { type: CURRENT_VIEWED_INGREDIENT, item: currentIngredient })).toEqual(state);
+    expect(ingredientsReducer(undefined, { type: CURRENT_VIEWED_INGREDIENT, item: ingredient })).toEqual(state);
   });
   it("should handle CLEAR_CONSTRUCTOR_DATA", () => {
     const state = {

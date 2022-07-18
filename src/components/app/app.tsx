@@ -25,7 +25,7 @@ function App() {
     }>();
     const history = useHistory();
     let background = location.state && location.state.background;
-    const { currentViewedIngredient } = useSelector((store: { ingredients: any }) => store.ingredients);
+    const { currentViewedIngredient } = useSelector((store: { ingredients }) => store.ingredients);
     const closeModal = () => {
       dispatch({
         type: CLOSE_MODAL,

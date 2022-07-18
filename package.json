@@ -32,7 +32,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy-script": "npm run build && scp -r ./build/* practicum@158.160.2.215:/home/practicum/burger-frontend"
+    "deploy-script": "npm run build && scp -r ./build/* practicum@158.160.2.215:/home/practicum/burger-frontend",
+    "cypress": "cypress open cache clear"
   },
   "eslintConfig": {
     "extends": [
