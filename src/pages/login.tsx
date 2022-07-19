@@ -36,7 +36,7 @@ const LoginPage = () => {
           <PasswordInput name={"password"} onChange={handleChange} value={values.password || ""} />
         </div>
 
-        <Button type="primary" size="medium">
+        <Button type="primary" size="medium" name="loginButton">
           Войти
         </Button>
         <span className={`${styles.error} text text_type_main-default mb-6 mt-6`} style={{ visibility: loginUserFailed ? "visible" : "hidden" }}>

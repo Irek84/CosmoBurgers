@@ -106,7 +106,7 @@ const BurgerIngredients = () => {
           Начинки
         </Tab>
       </div>
-      <div className={`${styles.list}`} onScroll={handleScroll}>
+      <div className={`${styles.list}`} onScroll={handleScroll} data-cypress="ingredients">
         <IngredientsTypeList title="Булки" data={buns} typeId="buns" innerRef={bunRef} />
         <IngredientsTypeList title="Соусы" data={sauces} typeId="sauces" innerRef={sauceRef} />
         <IngredientsTypeList title="Начинки" data={mains} typeId="mains" innerRef={mainRef} />

@@ -29,7 +29,7 @@ const Modal: FC<TModalProps> = (props) => {
           <h1 className="mt-10 pt-3 ml-10 text text_type_main-large">
             {props.title}
           </h1>
-          <div className={styles.closeButton} onClick={props.onClose}>
+          <div className={styles.closeButton} onClick={props.onClose} data-cypress="closeModalButton">
             <CloseIcon type="primary" />
           </div>
         </div>

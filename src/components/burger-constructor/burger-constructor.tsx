@@ -49,7 +49,7 @@ const BurgerConstructor = () => {
       if (order!.order?.number > 0) {
         dispatch({
           type: OPEN_MODAL,
-          modalContent: <OrderDetails orderNumber={order!.order.number} />,
+          modalContent: <OrderDetails orderNumber={order!.order?.number} />,
         });
       }
     }
@@ -75,7 +75,7 @@ const BurgerConstructor = () => {
   }, [constructorData]);
 
   return (
-    <div className={`${styles.component} ${isHover ? styles.onHover : ""}`} ref={dropTarget}>
+    <div className={`${styles.component} ${isHover ? styles.onHover : ""}`} ref={dropTarget} data-cypress="constructor">
       <div className="mb-4 ml-4 mr-4 pl-8 mt-25">
         {bun && <ConstructorElement text={bun.name + " (верх)"} price={bun.price} thumbnail={bun.image} isLocked={true} type="top" />}
       </div>
@@ -91,7 +91,7 @@ const BurgerConstructor = () => {
         <span className="text text_type_digits-medium mr-10">
           {totalPrice} <CurrencyIcon type="primary" />
         </span>
-        <Button type="primary" size="large" onClick={handleClick} disabled={orderIsLoading || bun === null ? true : false}>
+        <Button type="primary" size="large" onClick={handleClick} disabled={orderIsLoading || bun === null ? true : false} name="orderButton">
           {orderIsLoading ? "Оформление...." : "Оформить заказ"}
         </Button>
       </div>

@@ -22,7 +22,7 @@ export type TIngredientsState = {
   currentViewedIngredient: null | IIngredient; //Проверить использование
 };
 
-const initialState: TIngredientsState = {
+export const initialState: TIngredientsState = {
   isLoading: false,
   hasError: false,
   ingredientData: [],
